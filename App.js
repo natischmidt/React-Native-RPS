@@ -32,7 +32,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#c181b1',
+    backgroundColor: '#da8fc9',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
-        color: '#fff',
+
     },
     board: {
         flexDirection: 'row',
@@ -50,14 +50,14 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     cardOutline: {
-         width: '30%',
+        width: '30%',
         aspectRatio: 1,
         padding: 10,
     },
     card: {
-        flex: 1,
+        width: 90,
+        height: 90,
         borderRadius: 10,
-        backgroundColor: '#EAEAEA',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -67,11 +67,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cardImage: {
-
-        flex:1,
-        width: '100%',
-        height: '100%',
-        resizeMode: 'contain',
+        width: 90,
+        height: 90,
+        resizeMode: 'cover',
     },
     cardBack: {
         flex: 1,
