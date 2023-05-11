@@ -43,42 +43,21 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     board: {
-        width: 'calc(100vh - 240px)',
-        maxWidth: 'calc(100vw - 40px)',
-        display: 'grid',
-        gridGap: 10,
-        margin: 'auto',
-        gridTemplateColumns: 'repeat(6, 1fr)',
+
     },
     cardOutline: {
-        perspective: 1000,
-        height: 'calc((100vh - 290px) / 6)',
-        maxHeight: 'calc((100vw - 90px) / 6)',
+
     },
     card: {
-        borderRadius: 5,
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        transform: [{ rotateY: '180deg' }],
-        transformStyle: 'preserve-3d',
-        transitionDuration: '0.3s',
+
     },
     cardFront: {
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
+
     },
     cardImage: {
-        flex: 1,
-        width: null,
-        height: null,
-        resizeMode: 'contain',
+
     },
     cardBack: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'blue',
-        borderRadius: 10,
+
     },
 });
