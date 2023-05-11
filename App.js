@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View,Image } from 'react-native';
 import images from './images';
 import {useState} from "react";
 
@@ -43,21 +43,37 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     board: {
-
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
     },
     cardOutline: {
-
+        width: '33.33%',
+        height: 150,
+        padding: 10,
     },
     card: {
-
+        flex: 1,
+        borderRadius: 10,
+        backgroundColor: '#EAEAEA',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     cardFront: {
-
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     cardImage: {
-
+        width: 80,
+        height: 80,
+        resizeMode: 'contain',
     },
     cardBack: {
-
+        flex: 1,
+        backgroundColor: '#333333',
+        borderRadius: 10,
     },
 });
