@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     cardOutline: {
-        width: '33.33%',
-        height: 150,
+         width: '30%',
+        aspectRatio: 1,
         padding: 10,
     },
     card: {
@@ -67,8 +67,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cardImage: {
-        width: 80,
-        height: 80,
+
+        flex:1,
+        width: '100%',
+        height: '100%',
         resizeMode: 'contain',
     },
     cardBack: {
