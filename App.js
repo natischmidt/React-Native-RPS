@@ -22,11 +22,13 @@
 import React from 'react';
 import { View } from 'react-native';
 import LoginPage from './screens/LoginPage';
+import GamePage from './screens/GamePage';
 
 const App = () => {
     return (
         <View>
-            <LoginPage />
+            {/*<LoginPage />*/}
+            <GamePage />
         </View>
     );
 };
