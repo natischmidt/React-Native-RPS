@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, ActivityIndicator } from "react-native";
+import {useNavigation} from "@react-navigation/native";
 
 export default function Login() {
+    const navigation = useNavigation();
     const [username, setUsername] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [password, setPassword] = useState("");
 
     const login = () => {
-
-
+        navigation.navigate('Cards');
+        //wip
     };
 
     return (
@@ -23,8 +25,7 @@ export default function Login() {
                     style={styles.textfield}
                     onChangeText={setUsername}
                     value={username}
-                    placeholder="Enter username"
-                />
+                    placeholder="Enter username"/>
 
                 <Text style={styles.label}>Password</Text>
                 <TextInput
@@ -32,13 +33,9 @@ export default function Login() {
                     onChangeText={setPassword}
                     value={password}
                     placeholder="Enter password"
-                    secureTextEntry
-                />
-                {!isLoading ? (
+                    secureTextEntry/>
+
                     <Button onPress={login} title="Enter" color="#e16ecf"/>
-                ) : (
-                    <ActivityIndicator size="large" color="#ff00d9"/>
-                )}
             </View>
         </View>
     );
