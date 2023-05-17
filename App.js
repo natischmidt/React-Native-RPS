@@ -19,7 +19,6 @@
 //     );
 // }
 
-
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -30,11 +29,10 @@ const App = () => {
                 <View style={styles.formSubContainer}></View>
 
                 <View style={styles.formSubContainer}>
-                    <Text style={styles.heading}>Logga in</Text>
+                    <Text style={styles.heading}>Login</Text>
                     <TextInput
                         style={styles.input}
                         placeholder="Username"
-                        keyboardType="default"
                         autoCapitalize="none"
                         autoCorrect={false}
                         id="email"
@@ -47,10 +45,9 @@ const App = () => {
 
             <View style={styles.overlayContainer}>
                 <View style={styles.overlay}>
-                    <View style={styles.overlayPanel}></View>
                     <View style={styles.overlayPanel}>
-                        <Text style={styles.heading}>RPS</Text>
-                        <Text>Type in a username!</Text>
+                        <Text style={styles.heading}> Rock Paper Scissor</Text>
+                        <Text>Type in your username</Text>
                     </View>
                 </View>
             </View>
@@ -60,62 +57,36 @@ const App = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+
     },
     formContainer: {
-        flexDirection: 'row',
+
     },
     formSubContainer: {
-        flex: 1,
-        alignItems: 'center',
-        padding: 20,
+
     },
     heading: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 10,
+
     },
     input: {
-        width: '100%',
-        height: 40,
-        borderWidth: 1,
-        borderColor: 'gray',
-        marginBottom: 10,
-        paddingHorizontal: 10,
+
     },
     button: {
-        width: '100%',
-        height: 40,
-        backgroundColor: 'blue',
-        justifyContent: 'center',
-        alignItems: 'center',
+
     },
     buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
+
     },
     overlayContainer: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
+
     },
     overlay: {
-        flexDirection: 'row',
-        width: '100%',
-        height: '100%',
+
     },
     overlayPanel: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
+
     },
 });
+
 
 export default App;
