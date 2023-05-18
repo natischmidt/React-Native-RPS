@@ -12,33 +12,33 @@ const GamePage = () => {
                     setGameInfo(game);
                     if (game.playerOne !== null && game.playerTwo !== null) {
                         clearInterval(startInterval);
-                        waitingForMove();
+                        // waitingForMove();
                     }
                 })
                 .catch(error => console.log(error));
         }, 500);
     }, []);
 
-    const waitingForMove = async () => {
-        clearInterval(startInterval);
-        await refreshFn();
-        const timer = setInterval(() => {
-            getGameInfo()
-                .then(game => {
-                    if (game?.playerMove !== null && game?.opponentMove !== null) {
-                        refreshFn();
-                        checkResult(
-                            game?.player1.username,
-                            game?.player2.username,
-                            game?.playerMove,
-                            game?.opponentMove
-                        );
-                        clearInterval(timer);
-                    }
-                })
-                .catch(error => console.log(error));
-        }, 1000);
-    };
+    // const waitingForMove = async () => {
+    //     clearInterval(startInterval);
+    //     await refreshFn();
+    //     const timer = setInterval(() => {
+    //         getGameInfo()
+    //             .then(game => {
+    //                 if (game?.playerMove !== null && game?.opponentMove !== null) {
+    //                     refreshFn();
+    //                     checkResult(
+    //                         game?.player1.username,
+    //                         game?.player2.username,
+    //                         game?.playerMove,
+    //                         game?.opponentMove
+    //                     );
+    //                     clearInterval(timer);
+    //                 }
+    //             })
+    //             .catch(error => console.log(error));
+    //     }, 1000);
+    // };
 
     const refreshFn = async () => {
         const response = await getGameInfo();
