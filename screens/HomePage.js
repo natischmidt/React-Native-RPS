@@ -1,10 +1,12 @@
 import React, {useEffect} from 'react';
 import IP_URL from "../services/IP";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {View} from "react-native-web";
 
 
 
 const getToken = async () => {
+
     try {
         const response = await fetch(IP_URL + '/user/token');
         const json = await response.json();
@@ -43,7 +45,9 @@ const HomePage = () => {
     }, []);
 
     return (
-
+<View>
+    <Text> test </Text>
+</View>
         //homepage design
     )
 
