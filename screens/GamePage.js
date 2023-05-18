@@ -25,13 +25,13 @@ const GamePage = () => {
         const timer = setInterval(() => {
             getGameInfo()
                 .then(game => {
-                    if (game.playerMove !== null && game.opponentMove !== null) {
+                    if (game?.playerMove !== null && game?.opponentMove !== null) {
                         refreshFn();
                         checkResult(
-                            game.player1.username,
-                            game.player2.username,
-                            game.playerMove,
-                            game.opponentMove
+                            game?.player1.username,
+                            game?.player2.username,
+                            game?.playerMove,
+                            game?.opponentMove
                         );
                         clearInterval(timer);
                     }
