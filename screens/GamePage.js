@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import IP_URL from "../services/IP";
 import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import {getData} from "./HomePage";
+import {getData, storeData} from "./HomePage";
 
 
-const CreateGame = async () => {
+const StartGame = async () => {
     try {
         return fetch(IP_URL + '/games/start', {
             method: "POST",
@@ -51,6 +51,33 @@ const GameList = async () => {
 const GamePage = () => {
 
     const [openGames, setOpenGames] = useState([]);
+    const [updatedGames, setUpdatedGames] = useState([]);
+
+
+    useEffect(() => {
+        GameList()
+            .then((game) => {
+                setOpenGames(game);
+            })
+            .catch((error) => console.log(error.message))
+    }, [updatedGames]);
+
+
+    const handleStartGame = async () => {
+        await StartGame()
+            .then( (response) => {
+                storeData('gameId', response.gameStatusId);
+                //wip
+            })
+    };
+
+    const handleJoin = async (gameId) => {
+        await JoinGame(gameId)
+            .then(() => {
+                storeData('gameId',gameId);
+                //wip
+            });
+    };
 
     return (
         <View style={styles.container}>
