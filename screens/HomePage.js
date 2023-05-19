@@ -56,7 +56,7 @@ const HomePage = () => {
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../assets/background.jpg')} resizeMode="cover" style={styles.background}>
-                <Text style={styles.text}>ROCK paper scissors.</Text>
+                <Text style={styles.text}>ROCK paper scissors</Text>
                 <TouchableOpacity style={styles.button} onPress={handlePress}>
                     <Text style={styles.buttonText}>LET'S LOG IN</Text>
                 </TouchableOpacity>
@@ -79,7 +79,9 @@ const styles =StyleSheet.create({
     },
 
     text: {
+        fontWeight: 'bold',
         color: 'black',
+        fontSize: 25,
         marginLeft: '31%',
         marginTop: '10%',
     },
@@ -95,8 +97,9 @@ const styles =StyleSheet.create({
         borderColor: 'white',
     },
     buttonText: {
+        fontWeight: 'bold',
         color: 'black',
-        fontSize: 16,
+        fontSize: 25,
     },
 
 

@@ -1,50 +1,101 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {View, TextInput, StyleSheet, Keyboard, Button} from 'react-native';
+import {TouchableWithoutFeedback} from "react-native-web";
+import {getData, storeData} from "./HomePage";
+import IP_URL from "../services/IP";
+
+
 
 const LoginPage = () => {
-    const handleLogin = () => {
 
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const Login = async (username, password) => {
+        try {
+            return fetch(IP_URL + '/auth/authenticate', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                }, body: JSON.stringify({username, password}),
+            }).then((response) => response.json())
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleLogin = async () => {
+        await Login(username, password)
+            .then((response) => {
+                if (response !== '') {
+                    storeData('token', response.token);
+                    storeData('username', response.username);
+                    setPassword('');
+                    setUsername(`${response.username}`);
+                }
+            });
+    };
+
+    const Register = async (username, password) => {
+        try {
+            return fetch(IP_URL + '/auth/register', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "token": await getData('token'),
+                }, body: JSON.stringify({username, password}),
+            }).then((response) => response.json())
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleRegister = async () => {
+        await Register(username, password)
+            .then((res) => {
+                if (res === true) {
+                    setUsername('');
+                    setPassword('');
+                }
+            });
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.formContainer}>
-                <View style={styles.formSubContainer}></View>
-
-                <View style={styles.formSubContainer}>
-                    <Text style={styles.heading}>Login</Text>
+            <View style={styles.container}>
+                <View style={styles.input}>
                     <TextInput
-                        style={styles.input}
-                        placeholder="Username"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        id="email"
+                        placeholder='Enter username'
+                        value={username}
+                        onChangeText={setUsername}/>
+                    <TextInput
+                        placeholder='Enter password'
+                        encrypted={true}
+                        value={password}
+                        onChangeText={setPassword}
                     />
-                    <TouchableOpacity style={styles.button} onPress={() => handleLogin()}>
-                        <Text style={styles.buttonText}>Click here</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            <View style={styles.overlayContainer}>
-                <View style={styles.overlay}>
-                    <View style={styles.overlayPanel}>
-                        <Text style={styles.heading}>Rock Paper Scissors</Text>
-                        <Text>Type in your username</Text>
+                    <View style={styles.buttonContainer}>
+                        <Button title="Login" onPress={handleLogin} />
+                        <Button title="Register" onPress={handleRegister} />
                     </View>
                 </View>
             </View>
-        </View>
+
     );
 };
 
 const styles = StyleSheet.create({
-    container: {},
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'},
+    buttonContainer: {
+        },
     formContainer: {},
     formSubContainer: {},
     heading: {},
-    input: {},
+    input: {
+        width: '80%',
+        marginBottom: 10,},
     button: {},
     buttonText: {},
     overlayContainer: {},
