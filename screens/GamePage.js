@@ -1,8 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
+import IP_URL from "../services/IP";
 import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import {getData} from "./HomePage";
+
+
+const CreateGame = async () => {
+    try {
+        return fetch(IP_URL + '/games/start', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                token: await getData('token'),
+            },
+        })
+            .then((response) => response.json())
+    }catch (error) {
+        console.log(error.message)
+    }
+}
+
+const JoinGame = async (gameId) => {
+    try {
+        return fetch(IP_URL + '/join/{gameId}', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                token: await getData('token'),
+                gameId: gameId,
+            },
+        })
+            .then((response) => response.json())
+    }catch (error) {
+        console.log(error.message)
+    }
+}
+
+
+const GameList = async () => {
+    try {
+        return fetch(IP_URL + '/games', {
+            method: "GET",
+        })
+            .then((response) => response.json())
+    }catch (error) {
+        console.log(error.message)
+    }
+}
 
 
 const GamePage = () => {
+
+    const [openGames, setOpenGames] = useState([]);
 
     return (
         <View style={styles.container}>

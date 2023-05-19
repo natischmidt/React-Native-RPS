@@ -7,7 +7,6 @@ import HomePage from "./screens/HomePage";
 
 
 
-
 const Stacked = createNativeStackNavigator();
 
 export default function App () {

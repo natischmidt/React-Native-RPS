@@ -6,7 +6,6 @@ import {useNavigation} from "@react-navigation/native";
 import {ImageBackground, TouchableOpacity} from "react-native";
 
 
-
 const getToken = async () => {
 
     try {

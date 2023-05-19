@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {View, TextInput, StyleSheet, Keyboard, Button} from 'react-native';
-import {TouchableWithoutFeedback} from "react-native-web";
+import {View, TextInput, StyleSheet, Button} from 'react-native';
 import {getData, storeData} from "./HomePage";
 import IP_URL from "../services/IP";
 
