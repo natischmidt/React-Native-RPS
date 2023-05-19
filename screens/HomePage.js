@@ -1,7 +1,9 @@
 import React, {useEffect} from 'react';
 import IP_URL from "../services/IP";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {View} from "react-native-web";
+import {View, Text, StyleSheet} from 'react-native';
+import {useNavigation} from "@react-navigation/native";
+import {ImageBackground, TouchableOpacity} from "react-native";
 
 
 
@@ -21,8 +23,8 @@ export const storeData = async (key, value) => {
         await AsyncStorage.setItem(key, value)
             .then(() => console.log(key  + value ))
 
-    } catch (e) {
-        console.log(e.message())
+    } catch (error) {
+        console.log(error.message())
     }
 }
 
@@ -37,6 +39,13 @@ export const getData = async (key) => {
 
 const HomePage = () => {
 
+    const navigation = useNavigation();
+
+    const handlePress = () => {
+        navigation.navigate('Login');
+    };
+
+
     useEffect(() => {
         getToken().then( token => {
             storeData('token', token)
@@ -45,13 +54,54 @@ const HomePage = () => {
     }, []);
 
     return (
-<View>
-    <Text> test </Text>
-</View>
-        //homepage design
+        <View style={styles.container}>
+            <ImageBackground source={require('../assets/background.jpg')} resizeMode="cover" style={styles.background}>
+                <Text style={styles.text}>ROCK paper scissors.</Text>
+                <TouchableOpacity style={styles.button} onPress={handlePress}>
+                    <Text style={styles.buttonText}>LET'S LOG IN</Text>
+                </TouchableOpacity>
+            </ImageBackground>
+        </View>
+
     )
 
-
 };
+
+const styles =StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    background: {
+        width: '100%',
+        height: '100%',
+    },
+
+    text: {
+        color: 'black',
+        marginLeft: '31%',
+        marginTop: '10%',
+    },
+    button: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 4,
+        elevation: 3,
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        borderColor: 'white',
+    },
+    buttonText: {
+        color: 'black',
+        fontSize: 16,
+    },
+
+
+});
+
+
 
 export default HomePage;
