@@ -83,7 +83,7 @@ const GamePage = () => {
     return (
 
         <View>
-            wip
+            {/*//wip*/}
         </View>
 
     )

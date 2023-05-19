@@ -45,17 +45,21 @@ const Game = () => {
         <View style={styles.container}>
             <View style={styles.choicesContainer}>
 
-                <TouchableOpacity style={[styles.button, styles.choiceButton]} onPress={() => choose('rock')} id="rock">
+                <TouchableOpacity style={styles.choiceButton} onPress={async () => HandleMove(await getData('token'), 'rock')
+                }}}>
                     <Image source={require('../images/rock.png.bmp')} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.button, styles.choiceButton]} onPress={() => choose('scissors')} id="scissor">
+                <TouchableOpacity style={styles.choiceButton} onPress={async () => HandleMove(await getData('token'), 'scissors')
+                }}}>
                     <Image source={require('../images/scissor.png.bmp')} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.button, styles.choiceButton]} onPress={() => choose('paper')} id="paper">
+                <TouchableOpacity style={styles.choiceButton} onPress={async () => HandleMove(await getData('token'), 'paper')
+                }}}>
                     <Image source={require('../images/paper.png.bmp')} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
+
             </View>
         </View>
     )
