@@ -21,7 +21,7 @@ const StartGame = async () => {
 
 const JoinGame = async (gameId) => {
     try {
-        return fetch(IP_URL + '/join/{gameId}', {
+        return fetch(IP_URL + '/join/gameId', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
