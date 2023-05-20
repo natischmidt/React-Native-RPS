@@ -9,7 +9,7 @@ import {ImageBackground, TouchableOpacity} from "react-native";
 const getToken = async () => {
 
     try {
-        const response = await fetch(IP_URL + '/user/token');
+        const response = await fetch(IP_URL + 'auth/token');
         const json = await response.json();
         return json.toString();
     } catch (error) {
