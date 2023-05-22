@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Modal, Text, FlatList, Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import IP_URL from "../services/IP";
 import { getData, storeData } from "./HomePage";
+
 
 const StartGame = async () => {
     try {
@@ -14,7 +16,8 @@ const StartGame = async () => {
         });
 
         if (response.ok) {
-            return response.json();
+            const data = await response.json();
+            return data.uuid;
         } else {
             throw new Error('Failed to start game');
         }
@@ -23,19 +26,20 @@ const StartGame = async () => {
     }
 };
 
+
 const JoinGame = async (gameId) => {
     try {
-        const response = await fetch(IP_URL + '/join/gameId', {
+        const response = await fetch(IP_URL + `/join/${gameId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 token: await getData('token'),
-                gameId: gameId,
             },
         });
 
         if (response.ok) {
-            return response.json();
+            const data = await response.json();
+            return data.uuid;
         } else {
             throw new Error('Failed to join game');
         }
@@ -53,7 +57,7 @@ const GameList = async () => {
         if (response.ok) {
             const gameList = await response.json();
             return gameList.map(game => ({
-                gameId: game.id,
+                gameId: game.uuid,
             }));
         } else {
             throw new Error('Failed to fetch game list');
@@ -65,6 +69,7 @@ const GameList = async () => {
 
 
 const GamePage = () => {
+    const navigation = useNavigation();
     const [openGames, setOpenGames] = useState([]);
     const [updatedGames, setUpdatedGames] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -80,18 +85,24 @@ const GamePage = () => {
     const handleStartGame = async () => {
         try {
             const response = await StartGame();
-            await storeData('gameId', response.gameId);
-            navigator.navigate('Game');
+            console.log(response);
+            if (response) {
+                await storeData('gameId', response);
+                navigation.navigate('Game');
+            } else {
+                throw new Error('Failed to start game');
+            }
         } catch (error) {
             console.error(error);
         }
     };
 
+
     const handleJoin = async (gameId) => {
         try {
             await JoinGame(gameId);
             await storeData('gameId', gameId);
-            navigator.navigate('Game');
+            navigation.navigate('Game');
             setUpdatedGames((prevState) => [...prevState, Date.now()]);
         } catch (error) {
             console.error(error);
@@ -144,5 +155,3 @@ const styles = StyleSheet.create({
 });
 
 export default GamePage;
-
-
