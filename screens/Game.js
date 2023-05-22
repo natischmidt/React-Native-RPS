@@ -44,26 +44,39 @@ const Game = () => {
     return (
         <View style={styles.container}>
             <View style={styles.choicesContainer}>
-
-                //wip
-                <TouchableOpacity style={styles.choiceButton} onPress={async () => HandleMove(await getData('token'), 'rock')
-                }}}>
-                    <Image source={require('../images/rock.png.bmp')} style={[styles.image, styles.choiceImage]} />
+                <TouchableOpacity
+                    style={styles.choiceButton}
+                    onPress={async () => HandleMove(await getData('token'), 'rock')}
+                >
+                    <Image
+                        source={require('../images/rock.png.bmp')}
+                        style={[styles.image, styles.choiceImage]}
+                    />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.choiceButton} onPress={async () => HandleMove(await getData('token'), 'scissors')
-                }}}>
-                    <Image source={require('../images/scissor.png.bmp')} style={[styles.image, styles.choiceImage]} />
+                <TouchableOpacity
+                    style={styles.choiceButton}
+                    onPress={async () => HandleMove(await getData('token'), 'scissors')}
+                >
+                    <Image
+                        source={require('../images/scissor.png.bmp')}
+                        style={[styles.image, styles.choiceImage]}
+                    />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.choiceButton} onPress={async () => HandleMove(await getData('token'), 'paper')
-                }}}>
-                    <Image source={require('../images/paper.png.bmp')} style={[styles.image, styles.choiceImage]} />
+                <TouchableOpacity
+                    style={styles.choiceButton}
+                    onPress={async () => HandleMove(await getData('token'), 'paper')}
+                >
+                    <Image
+                        source={require('../images/paper.png.bmp')}
+                        style={[styles.image, styles.choiceImage]}
+                    />
                 </TouchableOpacity>
-
             </View>
         </View>
-    )
+    );
+
 
 
 };
@@ -94,3 +107,5 @@ const styles = StyleSheet.create({
     },
 });
 
+
+export default Game;
