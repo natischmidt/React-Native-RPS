@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Modal, Text, FlatList, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {Button, FlatList, Modal, StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import IP_URL from "../services/IP";
-import { getData, storeData } from "./HomePage";
+import {getData, storeData} from "./HomePage";
+
 
 const StartGame = async () => {
     try {
@@ -10,13 +11,16 @@ const StartGame = async () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                token: await getData('token'),
+                "token": await getData('token'),
             },
         });
 
         if (response.ok) {
             const data = await response.json();
-            return data.uuid;
+            if (!data) {
+                throw new Error('Empty response');
+            }
+            return data;
         } else {
             throw new Error('Failed to start game');
         }
@@ -25,14 +29,14 @@ const StartGame = async () => {
     }
 };
 
-const JoinGame = async (gameId) => {
+const JoinGame = async (gameid) => {
     try {
-        const response = await fetch(IP_URL + `/join/${gameId}`, {
+        const response = await fetch(IP_URL + `/join/${gameid}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 token: await getData('token'),
-                gameId: gameId,
+                gameId: gameid,
             },
         });
 
@@ -51,12 +55,14 @@ const GameList = async () => {
     try {
         const response = await fetch(IP_URL + '/games', {
             method: "GET",
+            token: await getData('token'),
+
         });
 
         if (response.ok) {
             const gameList = await response.json();
             return gameList.map(game => ({
-                gameId: game.uuid,
+                gameid: game.uuid,
             }));
         } else {
             throw new Error('Failed to fetch game list');
@@ -85,7 +91,7 @@ const GamePage = () => {
             const response = await StartGame();
             console.log(response);
             if (response) {
-                await storeData('gameId', response);
+                await storeData('gameid', response);
                 navigation.navigate('Game');
             } else {
                 throw new Error('Failed to start game');
@@ -95,10 +101,10 @@ const GamePage = () => {
         }
     };
 
-    const handleJoin = async (gameId) => {
+    const handleJoin = async (gameid) => {
         try {
-            await JoinGame(gameId);
-            await storeData('gameId', gameId);
+            await JoinGame(gameid);
+            await storeData('gameid', gameid);
             navigation.navigate('Game');
             setUpdatedGames((prevState) => [...prevState, Date.now()]);
         } catch (error) {
@@ -109,8 +115,8 @@ const GamePage = () => {
     const renderList = ({ item }) => {
         return (
             <View style={styles.gameItem}>
-                <Text>{item.gameId}</Text>
-                <Button title="Join" onPress={() => handleJoin(item.gameId)} />
+                <Text>{item.gameid}</Text>
+                <Button title="Join" onPress={() => handleJoin(item.gameid)} />
             </View>
         );
     };
@@ -126,7 +132,7 @@ const GamePage = () => {
                     <FlatList
                         data={openGames}
                         renderItem={renderList}
-                        keyExtractor={(item) => item.gameId.toString()}
+                        keyExtractor={(item) => item.gameid.toString()}
                     />
                     <Button title="Close" onPress={() => setModalVisible(false)} />
                 </View>
