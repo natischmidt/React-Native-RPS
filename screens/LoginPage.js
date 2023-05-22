@@ -1,84 +1,82 @@
-import React, {useState} from 'react';
-import {View, TextInput, StyleSheet, Button} from 'react-native';
-import {getData, storeData} from "./HomePage";
-import IP_URL from "../services/IP";
-
-
+import React, { useState } from 'react';
+import { View, TextInput, StyleSheet, Button, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import IP_URL from '../services/IP';
 
 const LoginPage = () => {
-
+    const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const Login = async (username, password) => {
+    const login = async () => {
         try {
-            return fetch(IP_URL + '/auth/authenticate', {
-                method: "POST",
+            const response = await fetch(IP_URL + '/auth/authenticate', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
-                }, body: JSON.stringify({username, password}),
-            }).then((response) => response.json())
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                await AsyncStorage.setItem('token', data.token);
+                await AsyncStorage.setItem('username', data.username || '');
+
+                navigation.navigate('GamePage');
+            } else {
+                Alert.alert('Login failed', 'Invalid username or password');
+            }
         } catch (error) {
             console.error(error);
+            Alert.alert('Login failed', 'An error occurred during login');
         }
-    }
-
-    const handleLogin = async () => {
-        await Login(username, password)
-            .then((response) => {
-                if (response !== '') {
-                    storeData('token', response.token);
-                    storeData('username', response.username);
-                    setPassword('');
-                    setUsername(`${response.username}`);
-                }
-            });
     };
 
-    const Register = async (username, password) => {
+    const register = async () => {
         try {
-            return fetch(IP_URL + '/auth/register', {
-                method: "POST",
+            const response = await fetch(IP_URL + '/auth/register', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
-                    "token": await getData('token'),
-                }, body: JSON.stringify({username, password}),
-            }).then((response) => response.json())
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                setUsername('');
+                setPassword('');
+                Alert.alert('Registration successful', 'You can now login.');
+            } else {
+                Alert.alert('Registration failed', 'An error occurred during registration');
+            }
         } catch (error) {
             console.error(error);
+            Alert.alert('Registration failed', 'An error occurred during registration');
         }
-    }
-
-    const handleRegister = async () => {
-        await Register(username, password)
-            .then((res) => {
-                if (res === true) {
-                    setUsername('');
-                    setPassword('');
-                }
-            });
     };
 
     return (
-            <View style={styles.container}>
-                <View style={styles.input}>
-                    <TextInput
-                        placeholder='Enter username'
-                        value={username}
-                        onChangeText={setUsername}/>
-                    <TextInput
-                        placeholder='Enter password'
-                        encrypted={true}
-                        value={password}
-                        onChangeText={setPassword}
-                    />
-                    <View style={styles.buttonContainer}>
-                        <Button title="Login" onPress={handleLogin} />
-                        <Button title="Register" onPress={handleRegister} />
-                    </View>
+        <View style={styles.container}>
+            <View style={styles.input}>
+                <TextInput
+                    placeholder="Enter username"
+                    value={username}
+                    onChangeText={setUsername}
+                />
+                <TextInput
+                    placeholder="Enter password"
+                    secureTextEntry={true}
+                    value={password}
+                    onChangeText={setPassword}
+                />
+                <View style={styles.buttonContainer}>
+                    <Button title="Login" onPress={login} />
+                    <Button title="Register" onPress={register} />
                 </View>
             </View>
-
+        </View>
     );
 };
 
@@ -86,20 +84,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'},
-    buttonContainer: {
-        },
-    formContainer: {},
-    formSubContainer: {},
-    heading: {},
+        justifyContent: 'center',
+    },
     input: {
         width: '80%',
-        marginBottom: 10,},
-    button: {},
-    buttonText: {},
-    overlayContainer: {},
-    overlay: {},
-    overlayPanel: {},
+        marginBottom: 10,
+    },
+    buttonContainer: {},
 });
 
 export default LoginPage;

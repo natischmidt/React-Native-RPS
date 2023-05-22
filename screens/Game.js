@@ -45,6 +45,7 @@ const Game = () => {
         <View style={styles.container}>
             <View style={styles.choicesContainer}>
 
+                //wip
                 <TouchableOpacity style={styles.choiceButton} onPress={async () => HandleMove(await getData('token'), 'rock')
                 }}}>
                     <Image source={require('../images/rock.png.bmp')} style={[styles.image, styles.choiceImage]} />
