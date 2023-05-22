@@ -32,6 +32,7 @@ const JoinGame = async (gameId) => {
             headers: {
                 "Content-Type": "application/json",
                 token: await getData('token'),
+                gameId: gameId,
             },
         });
 
