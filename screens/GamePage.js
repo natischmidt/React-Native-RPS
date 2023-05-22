@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import IP_URL from "../services/IP";
 import { getData, storeData } from "./HomePage";
 
-
 const StartGame = async () => {
     try {
         const response = await fetch(IP_URL + '/games/start', {
@@ -25,7 +24,6 @@ const StartGame = async () => {
         console.error(error.message);
     }
 };
-
 
 const JoinGame = async (gameId) => {
     try {
@@ -67,7 +65,6 @@ const GameList = async () => {
     }
 };
 
-
 const GamePage = () => {
     const navigation = useNavigation();
     const [openGames, setOpenGames] = useState([]);
@@ -97,7 +94,6 @@ const GamePage = () => {
         }
     };
 
-
     const handleJoin = async (gameId) => {
         try {
             await JoinGame(gameId);
@@ -108,7 +104,6 @@ const GamePage = () => {
             console.error(error);
         }
     };
-
 
     const renderList = ({ item }) => {
         return (
