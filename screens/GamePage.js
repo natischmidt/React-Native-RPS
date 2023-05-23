@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, FlatList, Modal, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import IP_URL from "../services/IP";
+import { authenticateUser } from '../services/authService';
 import {getData, storeData} from "./HomePage";
 
 
@@ -26,6 +27,7 @@ const StartGame = async () => {
         }
     } catch (error) {
         console.error(error.message);
+
     }
 };
 
@@ -36,7 +38,7 @@ const JoinGame = async (gameid) => {
             headers: {
                 "Content-Type": "application/json",
                 token: await getData('token'),
-                gameId: gameid,
+                "game-id": gameid,
             },
         });
 
@@ -48,6 +50,7 @@ const JoinGame = async (gameid) => {
         }
     } catch (error) {
         console.error(error.message);
+
     }
 };
 
@@ -55,7 +58,10 @@ const GameList = async () => {
     try {
         const response = await fetch(IP_URL + '/games', {
             method: "GET",
-            token: await getData('token'),
+            headers: {
+                "Content-Type": "application/json",
+                token: await getData('token'),
+            },
 
         });
 
@@ -69,6 +75,7 @@ const GameList = async () => {
         }
     } catch (error) {
         console.error(error.message);
+
     }
 };
 
@@ -100,6 +107,7 @@ const GamePage = () => {
             console.error(error);
         }
     };
+
 
     const handleJoin = async (gameid) => {
         try {
