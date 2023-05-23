@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Button, FlatList, Modal, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import IP_URL from "../services/IP";
-import { authenticateUser } from '../services/authService';
+import { authenticateUser } from '../services/auth-service';
 import {getData, storeData} from "./HomePage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const StartGame = async () => {
@@ -93,12 +94,37 @@ const GamePage = () => {
             .catch((error) => console.log(error.message));
     }, [updatedGames]);
 
+    // const handleStartGame = async () => {
+    //     try {
+    //         const response = await StartGame();
+    //         console.log(response);
+    //         if (response) {
+    //             await storeData('gameid', response);
+    //             navigation.navigate('Game');
+    //         } else {
+    //             throw new Error('Failed to start game');
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
     const handleStartGame = async () => {
         try {
-            const response = await StartGame();
-            console.log(response);
-            if (response) {
-                await storeData('gameid', response);
+
+            const token = await AsyncStorage.getItem('token');
+
+            const response = await fetch(IP_URL + '/start-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                await storeData('gameid', data);
                 navigation.navigate('Game');
             } else {
                 throw new Error('Failed to start game');
@@ -107,6 +133,7 @@ const GamePage = () => {
             console.error(error);
         }
     };
+
 
 
     const handleJoin = async (gameid) => {
