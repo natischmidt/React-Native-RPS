@@ -1,45 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {Button, FlatList, Modal, StyleSheet, Text, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import IP_URL from "../services/IP";
-import { authenticateUser } from '../services/auth-service';
-import {getData, storeData} from "./HomePage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from 'react';
+import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import IP_URL from '../services/IP';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-const StartGame = async () => {
-    try {
-        const response = await fetch(IP_URL + '/games/start', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "token": await getData('token'),
-            },
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            if (!data) {
-                throw new Error('Empty response');
-            }
-            return data;
-        } else {
-            throw new Error('Failed to start game');
-        }
-    } catch (error) {
-        console.error(error.message);
-
-    }
-};
-
-const JoinGame = async (gameid) => {
+const JoinGame = async (gameid, jwtToken, playerToken) => {
     try {
         const response = await fetch(IP_URL + `/join/${gameid}`, {
-            method: "POST",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
-                token: await getData('token'),
-                "game-id": gameid,
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`,
+                'playerid': playerToken,
             },
         });
 
@@ -51,32 +23,7 @@ const JoinGame = async (gameid) => {
         }
     } catch (error) {
         console.error(error.message);
-
-    }
-};
-
-const GameList = async () => {
-    try {
-        const response = await fetch(IP_URL + '/games', {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                token: await getData('token'),
-            },
-
-        });
-
-        if (response.ok) {
-            const gameList = await response.json();
-            return gameList.map(game => ({
-                gameid: game.uuid,
-            }));
-        } else {
-            throw new Error('Failed to fetch game list');
-        }
-    } catch (error) {
-        console.error(error.message);
-
+        throw error;
     }
 };
 
@@ -87,44 +34,46 @@ const GamePage = () => {
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
-        GameList()
-            .then((game) => {
-                setOpenGames(game);
-            })
-            .catch((error) => console.log(error.message));
+        fetchGameList();
     }, [updatedGames]);
 
-    // const handleStartGame = async () => {
-    //     try {
-    //         const response = await StartGame();
-    //         console.log(response);
-    //         if (response) {
-    //             await storeData('gameid', response);
-    //             navigation.navigate('Game');
-    //         } else {
-    //             throw new Error('Failed to start game');
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
+    const fetchGameList = async () => {
+        try {
+            const jwtToken = await AsyncStorage.getItem('jwtToken');
+            const response = await fetch(IP_URL + '/games', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`,
+                },
+            });
+
+            if (response.ok) {
+                const gameList = await response.json();
+                setOpenGames(gameList);
+            } else {
+                throw new Error('Failed to fetch game list');
+            }
+        } catch (error) {
+            console.error(error.message);
+            throw error;
+        }
+    };
+
     const handleStartGame = async () => {
         try {
-
-            const token = await AsyncStorage.getItem('token');
-
+            const jwtToken = await AsyncStorage.getItem('jwtToken');
             const response = await fetch(IP_URL + '/start-game', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
+                    'Authorization': `Bearer ${jwtToken}`,
                 },
-
             });
 
             if (response.ok) {
                 const data = await response.json();
-                await storeData('gameid', data);
+                await AsyncStorage.setItem('gameid', data);
                 navigation.navigate('Game');
             } else {
                 throw new Error('Failed to start game');
@@ -134,12 +83,12 @@ const GamePage = () => {
         }
     };
 
-
-
     const handleJoin = async (gameid) => {
         try {
-            await JoinGame(gameid);
-            await storeData('gameid', gameid);
+            const jwtToken = await AsyncStorage.getItem('jwtToken');
+            const playerToken = await AsyncStorage.getItem('token');
+            await JoinGame(gameid, jwtToken, playerToken);
+            await AsyncStorage.setItem('gameid', gameid);
             navigation.navigate('Game');
             setUpdatedGames((prevState) => [...prevState, Date.now()]);
         } catch (error) {
