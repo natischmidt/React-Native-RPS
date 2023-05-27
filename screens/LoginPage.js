@@ -1,62 +1,36 @@
-import React, { useState,useContext } from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import IP_URL from '../services/IP';
-import {AuthContext} from "../context/AuthContext";
+import IP_URL from "../services/IP";
 
 const LoginPage = () => {
-    const {test} = useContext(AuthContext);
-
     const navigation = useNavigation();
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
 
-    const login = async () => {
+    const setPlayerName = async () => {
         try {
-            const response = await fetch(IP_URL + '/auth/authenticate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
+            const token = await AsyncStorage.getItem('token');
 
-            if (response.ok) {
-                const data = await response.json();
-                await AsyncStorage.setItem('token', data.token);
-                await AsyncStorage.setItem('username', data.username || '');
+            const response = await axios.post(
+                IP_URL + '/user/name',
+                { name },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token,
+                    },
+                }
+            );
 
+            if (response.status === 200) {
                 navigation.navigate('GamePage');
             } else {
-                Alert.alert('Login failed', 'Invalid username or password');
+                console.error('Failed to set player name');
             }
         } catch (error) {
-            console.error(error);
-            Alert.alert('Login failed', 'An error occurred during login');
-        }
-    };
-
-    const register = async () => {
-        try {
-            const response = await fetch(IP_URL + '/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (response.ok) {
-                setUsername('');
-                setPassword('');
-                Alert.alert('Registration successful', 'You can now login.');
-            } else {
-                Alert.alert('Registration failed', 'An error occurred during registration');
-            }
-        } catch (error) {
-            console.error(error);
-            Alert.alert('Registration failed', 'An error occurred during registration');
+            console.error('Error occurred while setting player name:', error);
         }
     };
 
@@ -64,19 +38,12 @@ const LoginPage = () => {
         <View style={styles.container}>
             <View style={styles.input}>
                 <TextInput
-                    placeholder="Enter username"
-                    value={username}
-                    onChangeText={setUsername}
-                />
-                <TextInput
-                    placeholder="Enter password"
-                    secureTextEntry={true}
-                    value={password}
-                    onChangeText={setPassword}
+                    placeholder="Enter your name"
+                    value={name}
+                    onChangeText={setName}
                 />
                 <View style={styles.buttonContainer}>
-                    <Button title="Login" onPress={login} />
-                    <Button title="Register" onPress={register} />
+                    <Button title="Set Name" onPress={setPlayerName} />
                 </View>
             </View>
         </View>
@@ -97,4 +64,5 @@ const styles = StyleSheet.create({
 });
 
 export default LoginPage;
+
 

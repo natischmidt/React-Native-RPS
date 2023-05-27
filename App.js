@@ -5,7 +5,6 @@ import LoginPage from "./screens/LoginPage";
 import GamePage from "./screens/GamePage";
 import HomePage from "./screens/HomePage";
 import Game from "./screens/Game";
-import {AuthProvider} from "./context/AuthContext";
 
 
 
@@ -13,7 +12,7 @@ const Stacked = createNativeStackNavigator();
 
 export default function App () {
     return (
-        <AuthProvider>
+
             <NavigationContainer>
                 <Stacked.Navigator>
                     <Stacked.Screen name='HomePage' component={HomePage}/>
@@ -22,7 +21,7 @@ export default function App () {
                     <Stacked.Screen name='Game' component={Game}/>
                 </Stacked.Navigator>
             </NavigationContainer>
-        </AuthProvider>
+
 
     );
 };

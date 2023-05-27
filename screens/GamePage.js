@@ -1,17 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {Button, FlatList, Modal, StyleSheet, Text, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import IP_URL from "../services/IP";
-import {getData, storeData} from "./HomePage";
-
+import React, { useEffect, useState } from 'react';
+import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import IP_URL from '../services/IP';
+import { getData, storeData } from './HomePage';
 
 const StartGame = async () => {
     try {
         const response = await fetch(IP_URL + '/games/start', {
-            method: "POST",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
-                "token": await getData('token'),
+                'Content-Type': 'application/json',
+                token: await getData('token'),
             },
         });
 
@@ -32,9 +31,9 @@ const StartGame = async () => {
 const JoinGame = async (gameid) => {
     try {
         const response = await fetch(IP_URL + `/join/${gameid}`, {
-            method: "POST",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 token: await getData('token'),
                 gameId: gameid,
             },
@@ -54,14 +53,15 @@ const JoinGame = async (gameid) => {
 const GameList = async () => {
     try {
         const response = await fetch(IP_URL + '/games', {
-            method: "GET",
-            token: await getData('token'),
-
+            method: 'GET',
+            headers: {
+                token: await getData('token'),
+            },
         });
 
         if (response.ok) {
             const gameList = await response.json();
-            return gameList.map(game => ({
+            return gameList.map((game) => ({
                 gameid: game.uuid,
             }));
         } else {
@@ -157,4 +157,3 @@ const styles = StyleSheet.create({
 });
 
 export default GamePage;
-
