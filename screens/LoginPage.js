@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { View, TextInput, StyleSheet, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import IP_URL from '../services/IP';
+import {AuthContext} from "../context/AuthContext";
 
 const LoginPage = () => {
+    const {test} = useContext(AuthContext);
+
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
