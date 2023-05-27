@@ -9,7 +9,7 @@ const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = async () => {
+    const login = async () => {
         try {
             const response = await fetch(IP_URL + '/auth/authenticate', {
                 method: 'POST',
@@ -21,9 +21,8 @@ const LoginPage = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                const jwtToken = data.token;
-
-                await AsyncStorage.setItem('jwtToken', jwtToken);
+                await AsyncStorage.setItem('token', data.token);
+                await AsyncStorage.setItem('username', data.username || '');
 
                 navigation.navigate('GamePage');
             } else {
@@ -73,7 +72,7 @@ const LoginPage = () => {
                     onChangeText={setPassword}
                 />
                 <View style={styles.buttonContainer}>
-                    <Button title="Login" onPress={handleLogin} />
+                    <Button title="Login" onPress={login} />
                     <Button title="Register" onPress={register} />
                 </View>
             </View>
