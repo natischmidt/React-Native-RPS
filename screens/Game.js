@@ -6,24 +6,46 @@ import {Image, StyleSheet, TouchableOpacity, View} from "react-native";
 
 
 
-
-
+// const MakeMove = async (token, sign) => {
+//     try {
+//         return fetch(IP_URL + '/games/move/{sign}', {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 token: token,
+//                 gameid: await getData('gameid'),
+//                 sign: sign
+//             },
+//         })
+//             .then((response) => response.json())
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
 const MakeMove = async (token, sign) => {
     try {
-        return fetch(IP_URL + '/games/move/{sign}', {
+        const response = await fetch(IP_URL + '/games/move/' + sign, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                token: token,
-                gameId: await getData('gameId'),
-                sign: sign
+                "token": token
             },
-        })
-            .then((response) => response.json())
+            body: JSON.stringify({
+                gameid: await getData('gameid'),
+                sign: sign
+            })
+        });
+
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error("Failed to make the move.");
+        }
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
     }
-}
+};
+
 
 const Game = () => {
 
