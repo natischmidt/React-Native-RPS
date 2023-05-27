@@ -1,39 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import IP_URL from "../services/IP";
-import {getData} from "./HomePage";
-import {Image, StyleSheet, TouchableOpacity, View} from "react-native";
+import { getData } from "./HomePage";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
-
-
-
-// const MakeMove = async (token, sign) => {
-//     try {
-//         return fetch(IP_URL + '/games/move/{sign}', {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json",
-//                 token: token,
-//                 gameid: await getData('gameid'),
-//                 sign: sign
-//             },
-//         })
-//             .then((response) => response.json())
-//     } catch (error) {
-//         console.log(error.message)
-//     }
-// }
 const MakeMove = async (token, sign) => {
     try {
-        const response = await fetch(IP_URL + '/games/move/' + sign, {
+        const response = await fetch(IP_URL + "/games/move/" + sign, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "token": token
+                token: token,
             },
             body: JSON.stringify({
-                gameid: await getData('gameid'),
-                sign: sign
-            })
+                gameid: await getData("gameid"),
+                sign: sign,
+            }),
         });
 
         if (response.ok) {
@@ -46,62 +27,55 @@ const MakeMove = async (token, sign) => {
     }
 };
 
-
 const Game = () => {
-
-    const [player, setPlayer] = useState('');
-    const [playerMove, setPlayerMove] = useState('');
-    const [opponent, setOpponent] = useState('');
-    const [opponentMove, setOpponentMove] = useState('');
-    const [result, setResult] = useState('');
-
+    const [player, setPlayer] = useState("");
+    const [playerMove, setPlayerMove] = useState("");
+    const [opponent, setOpponent] = useState("");
+    const [opponentMove, setOpponentMove] = useState("");
+    const [result, setResult] = useState("");
 
 
-    const HandleMove = async (token, move) => {
-        await MakeMove(token, move)
-            .then(async () => console.log());
+    const handleMove = async (token, move) => {
+        await MakeMove(token, move).then(() => console.log());
     };
-
 
     return (
         <View style={styles.container}>
             <View style={styles.choicesContainer}>
                 <TouchableOpacity
                     style={styles.choiceButton}
-                    onPress={async () => HandleMove(await getData('token'), 'rock')}
+                    onPress={async () => handleMove(await getData("token"), "rock")}
                 >
                     <Image
-                        source={require('../images/rock.png.bmp')}
+                        source={require("../images/rock.png.bmp")}
                         style={[styles.image, styles.choiceImage]}
                     />
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.choiceButton}
-                    onPress={async () => HandleMove(await getData('token'), 'scissors')}
+                    onPress={async () => handleMove(await getData("token"), "scissors")}
                 >
                     <Image
-                        source={require('../images/scissor.png.bmp')}
+                        source={require("../images/scissor.png.bmp")}
                         style={[styles.image, styles.choiceImage]}
                     />
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.choiceButton}
-                    onPress={async () => HandleMove(await getData('token'), 'paper')}
+                    onPress={async () => handleMove(await getData("token"), "paper")}
                 >
                     <Image
-                        source={require('../images/paper.png.bmp')}
+                        source={require("../images/paper.png.bmp")}
                         style={[styles.image, styles.choiceImage]}
                     />
                 </TouchableOpacity>
             </View>
         </View>
     );
-
-
-
 };
+
 
 
 const styles = StyleSheet.create({
