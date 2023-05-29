@@ -3,7 +3,7 @@ import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import IP_URL from '../services/IP';
 import { getData, storeData } from './HomePage';
-import axios from "axios";
+
 
 
 const StartGame = async () => {
@@ -60,7 +60,6 @@ const GameList = async () => {
 
 const GamePage = () => {
     const navigation = useNavigation();
-
     const [openGames, setOpenGames] = useState([]);
     const [updatedGames, setUpdatedGames] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -77,26 +76,18 @@ const GamePage = () => {
     const handleStartGame = async () => {
 
         await StartGame().then((response) => {
-
             console.log(response);
-
             storeData('gameid', response.uuid);
-
             console.log('Started Game');
-
             navigation.navigate('Game');
         });
     };
 
     const handleJoin = async (gameid) => {
         await JoinGame(gameid).then((response) => {
-
             console.log(response);
-
             storeData('gameid', response.uuid);
-
             console.log('Navigating to Game');
-
             navigation.navigate('Game');
 
         });

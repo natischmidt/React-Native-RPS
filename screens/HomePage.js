@@ -41,7 +41,7 @@ const HomePage = () => {
     const navigation = useNavigation();
 
     const handlePress = () => {
-        navigation.navigate('LoginPage');
+        navigation.navigate('Login');
     };
 
 

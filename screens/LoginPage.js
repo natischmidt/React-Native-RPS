@@ -25,7 +25,7 @@ const LoginPage = () => {
             );
 
             if (response.status === 200) {
-                navigation.navigate('GamePage');
+                navigation.navigate('Choose Game');
             } else {
                 console.error('Failed to set player name');
             }
