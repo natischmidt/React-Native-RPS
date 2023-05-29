@@ -3,27 +3,41 @@ import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
-const MakeMove = async (token, sign) => {
+// const MakeMove = async (token, sign) => {
+//     try {
+//         const response = await fetch(IP_URL + "/games/move/" + sign, {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 token: token,
+//             },
+//             body: JSON.stringify({
+//                 gameid: await getData("gameid"),
+//                 sign: sign,
+//             }),
+//         });
+//
+//         if (response.ok) {
+//             return response.json();
+//         } else {
+//             throw new Error("Failed to make the move.");
+//         }
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// };
+
+const MakeMove = async (token, gameContainer, sign) => {
     try {
-        const response = await fetch(IP_URL + "/games/move/" + sign, {
-            method: "POST",
+        return fetch(IP_URL + `/games/move/${sign}`, gameContainer, {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
                 token: token,
             },
-            body: JSON.stringify({
-                gameid: await getData("gameid"),
-                sign: sign,
-            }),
-        });
-
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error("Failed to make the move.");
-        }
-    } catch (error) {
-        console.log(error.message);
+        }).then((response) => console.log(response.json()));
+    } catch (err) {
+        console.log(err.message);
     }
 };
 
@@ -45,21 +59,25 @@ const Game = () => {
     //
     //     });
     // };
-    const handleMove = async (token, move) => {
-        try {
-            const response = await MakeMove(token, move);
-            console.log(response);
+    // const handleMove = async (token, move) => {
+    //     try {
+    //         const response = await MakeMove(token, move);
+    //         console.log(response);
+    //
+    //         if (response.player_move && response.opponent_move && response.result) {
+    //             setPlayerMove(response.playerMove);
+    //             setOpponentMove(response.opponentMove);
+    //             setResult(response.result);
+    //         } else {
+    //             throw new Error("Invalid response format");
+    //         }
+    //     } catch (error) {
+    //         console.log(error.message);
+    //     }
+    // };
 
-            if (response.player_move && response.opponent_move && response.result) {
-                setPlayerMove(response.playerMove);
-                setOpponentMove(response.opponentMove);
-                setResult(response.result);
-            } else {
-                throw new Error("Invalid response format");
-            }
-        } catch (error) {
-            console.log(error.message);
-        }
+    const handleMove = async (sign,gameContainer,token) => {
+        await MakeMove(sign,gameContainer,token);
     };
 
 
