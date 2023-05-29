@@ -27,13 +27,18 @@ const Game = () => {
     const [result, setResult] = useState("");
 
     const handleMove = async (sign) => {
-        const token = await getData("token");
+
 
         try {
             const gameid = await getData("gameid");
 
-            // Retrieve game data from the backend using gameUUID
-            const response = await axios.get(`/games/` + gameid);
+
+            const response = await axios.get(IP_URL + `/games/` + gameid
+                , {
+                    headers: {
+                        token: await getData('token'),
+                    },
+                });
             const gameData = response.data;
 
             const gameContainer = {
