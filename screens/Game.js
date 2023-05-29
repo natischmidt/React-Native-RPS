@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -34,10 +34,34 @@ const Game = () => {
     const [opponentMove, setOpponentMove] = useState("");
     const [result, setResult] = useState("");
 
-
+    // const handleMove = async (token, move) => {
+    //     // await MakeMove(token, move).then(() => console.log());
+    //     await MakeMove(token, move).then((response) => {
+    //         console.log(response);
+    //
+    //         setPlayerMove(response.player_move);
+    //         setOpponentMove(response.opponent_move);
+    //         setResult(response.result);
+    //
+    //     });
+    // };
     const handleMove = async (token, move) => {
-        await MakeMove(token, move).then(() => console.log());
+        try {
+            const response = await MakeMove(token, move);
+            console.log(response);
+
+            if (response.player_move && response.opponent_move && response.result) {
+                setPlayerMove(response.playerMove);
+                setOpponentMove(response.opponentMove);
+                setResult(response.result);
+            } else {
+                throw new Error("Invalid response format");
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
     };
+
 
     return (
         <View style={styles.container}>
