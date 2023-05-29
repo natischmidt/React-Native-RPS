@@ -73,18 +73,33 @@ const GamePage = () => {
 
 
     const handleStartGame = async () => {
-        await StartGame().then((res) => {
-            storeData('gameid', res.gameid);
+
+        await StartGame().then((response) => {
+
+            console.log(response);
+
+            storeData('gameid', response.uuid);
+
+            console.log('Started Game');
+
             navigation.navigate('Game');
         });
     };
 
     const handleJoin = async (gameid) => {
-        await JoinGame(gameid).then(() => {
-            storeData('gameid', gameid);
+        await JoinGame(gameid).then((response) => {
+
+            console.log(response);
+
+            storeData('gameid', response.uuid);
+
+            console.log('Navigating to Game');
+
             navigation.navigate('Game');
+
         });
     };
+
 
 
     const renderList = ({ item }) => {
