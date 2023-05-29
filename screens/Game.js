@@ -29,7 +29,7 @@ const Game = () => {
     const [gameStatus, setGameStatus] = useState(null);
 
     useEffect(() => {
-        const interval = setInterval(GameStatus, 1000);
+        const interval = setInterval(GameStatus, 5000);
 
         return () => {
             clearInterval(interval);
@@ -41,8 +41,8 @@ const Game = () => {
         const gameid = await getData('gameid');
         try {
             const response = await axios.get(IP_URL + `/games/` + gameid);
-            setGameStatus(response.data.gamestatus);
-            console.log(response.data.gamestatus);
+            setGameStatus(response.data);
+            console.log(response.data);
         } catch (error) {
             console.log(error);
         }
