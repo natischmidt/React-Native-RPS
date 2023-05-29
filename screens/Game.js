@@ -1,92 +1,70 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
+import axios from 'axios';
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
-// const MakeMove = async (token, sign) => {
-//     try {
-//         const response = await fetch(IP_URL + "/games/move/" + sign, {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json",
-//                 token: token,
-//             },
-//             body: JSON.stringify({
-//                 gameid: await getData("gameid"),
-//                 sign: sign,
-//             }),
-//         });
-//
-//         if (response.ok) {
-//             return response.json();
-//         } else {
-//             throw new Error("Failed to make the move.");
-//         }
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// };
-
 const MakeMove = async (token, gameContainer, sign) => {
     try {
-        return fetch(IP_URL + `/games/move/${sign}`, gameContainer, {
+        return fetch(IP_URL + `/games/move/${sign}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 token: token,
             },
-        }).then((response) => console.log(response.json()));
+            body: JSON.stringify(gameContainer),
+        })
+            .then((response) => response.json())
+            .then((data) => data);
     } catch (err) {
         console.log(err.message);
     }
 };
 
 const Game = () => {
-    const [player, setPlayer] = useState("");
     const [playerMove, setPlayerMove] = useState("");
-    const [opponent, setOpponent] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
     const [result, setResult] = useState("");
 
-    // const handleMove = async (token, move) => {
-    //     // await MakeMove(token, move).then(() => console.log());
-    //     await MakeMove(token, move).then((response) => {
-    //         console.log(response);
-    //
-    //         setPlayerMove(response.player_move);
-    //         setOpponentMove(response.opponent_move);
-    //         setResult(response.result);
-    //
-    //     });
-    // };
-    // const handleMove = async (token, move) => {
-    //     try {
-    //         const response = await MakeMove(token, move);
-    //         console.log(response);
-    //
-    //         if (response.player_move && response.opponent_move && response.result) {
-    //             setPlayerMove(response.playerMove);
-    //             setOpponentMove(response.opponentMove);
-    //             setResult(response.result);
-    //         } else {
-    //             throw new Error("Invalid response format");
-    //         }
-    //     } catch (error) {
-    //         console.log(error.message);
-    //     }
-    // };
+    const handleMove = async (sign) => {
+        const token = await getData("token");
 
-    const handleMove = async (sign,gameContainer,token) => {
-        await MakeMove(sign,gameContainer,token);
+        try {
+            const gameid = await getData("gameid");
+
+            // Retrieve game data from the backend using gameUUID
+            const response = await axios.get(`/games/` + gameid);
+            const gameData = response.data;
+
+            const gameContainer = {
+                uuid: gameData.uuid,
+                firstPlayer: gameData.firstPlayer,
+                playerMove: null,
+                secondPlayer: gameData.secondPlayer,
+                opponentMove: null,
+                gamestatus: gameData.gamestatus
+            };
+
+
+            const moveResponse = await MakeMove(token, gameContainer, sign);
+            console.log(moveResponse);
+
+
+            setPlayerMove(moveResponse.playerMove);
+            setOpponentMove(moveResponse.opponentMove);
+            setResult(moveResponse.result);
+        } catch (error) {
+
+            console.log(error);
+        }
     };
-
 
     return (
         <View style={styles.container}>
             <View style={styles.choicesContainer}>
                 <TouchableOpacity
                     style={styles.choiceButton}
-                    onPress={async () => handleMove(await getData("token"), "rock")}
+                    onPress={() => handleMove("rock")}
                 >
                     <Image
                         source={require("../images/rock.png.bmp")}
@@ -96,7 +74,7 @@ const Game = () => {
 
                 <TouchableOpacity
                     style={styles.choiceButton}
-                    onPress={async () => handleMove(await getData("token"), "scissors")}
+                    onPress={() => handleMove("scissors")}
                 >
                     <Image
                         source={require("../images/scissor.png.bmp")}
@@ -106,7 +84,7 @@ const Game = () => {
 
                 <TouchableOpacity
                     style={styles.choiceButton}
-                    onPress={async () => handleMove(await getData("token"), "paper")}
+                    onPress={() => handleMove("paper")}
                 >
                     <Image
                         source={require("../images/paper.png.bmp")}
@@ -118,11 +96,8 @@ const Game = () => {
     );
 };
 
-
-
 const styles = StyleSheet.create({
-    container: {
-    },
+    container: {},
     choicesContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -144,6 +119,5 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
 });
-
 
 export default Game;
