@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
@@ -26,6 +26,27 @@ const Game = () => {
     const [playerMove, setPlayerMove] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
     const [result, setResult] = useState("");
+    const [gameStatus, setGameStatus] = useState(null);
+
+    useEffect(() => {
+        const interval = setInterval(GameStatus, 1000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
+
+    const GameStatus = async () => {
+        const gameid = await getData('gameid');
+        try {
+            const response = await axios.get(IP_URL + `/games/` + gameid);
+            setGameStatus(response.data.gamestatus);
+            console.log(response.data.gamestatus);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const handleMove = async (sign) => {
 
