@@ -10,7 +10,7 @@ const MakeMove = async (token, gameContainer, sign) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                token: token,
+                token: await getData('token'),
             },
             body: JSON.stringify(gameContainer),
         })
@@ -21,6 +21,7 @@ const MakeMove = async (token, gameContainer, sign) => {
     }
 };
 
+
 const Game = () => {
     const [playerMove, setPlayerMove] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
@@ -28,15 +29,14 @@ const Game = () => {
 
     const handleMove = async (sign) => {
 
-
         try {
             const gameid = await getData("gameid");
-
+            const token = await getData("token");
 
             const response = await axios.get(IP_URL + `/games/` + gameid
                 , {
                     headers: {
-                        token: await getData('token'),
+                        token: token,
                     },
                 });
             const gameData = response.data;
