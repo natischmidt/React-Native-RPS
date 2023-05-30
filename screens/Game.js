@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
-import {Alert, StyleSheet, View} from "react-native";
-import {GameButtons} from "../components/GameButtons";
+import { Alert, StyleSheet, View } from "react-native";
+import { GameButtons } from "../components/GameButtons";
+import { useNavigation } from "@react-navigation/native";
 
 const MakeMove = async (token, gameContainer, sign) => {
     try {
@@ -22,67 +23,96 @@ const MakeMove = async (token, gameContainer, sign) => {
     }
 };
 
-
 const Game = () => {
     const [playerMove, setPlayerMove] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
     const [result, setResult] = useState("");
     const [gameStatus, setGameStatus] = useState(null);
-    const [gameResult, setGameResult] = useState(null);
+    const navigation = useNavigation();
 
     useEffect(() => {
-        const interval = setInterval(GameStatus, 5000);
+        const interval = setInterval(GameStatus, 1000);
         return () => {
             clearInterval(interval);
         };
     }, []);
-
-
-    useEffect(() => {
-        const interval = setInterval(ResultStatus, 5000);
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
-
-
-    // useEffect(() => {
-    //     if (gameResult) {
-    //         if (gameResult.result === "WIN") {
-    //             Alert.alert("You Win!");
-    //
-    //         } else if (gameResult.result === "DRAW") {
-    //             Alert.alert("It's a Draw!");
-    //         } else if (gameResult.result === "LOSE") {
-    //             Alert.alert("You Lose!");
-    //         }
-    //     }
-    // }, [gameResult]);
-
     const GameStatus = async () => {
         const gameid = await getData('gameid');
         try {
             const response = await axios.get(IP_URL + `/games/` + gameid);
-            setGameStatus(response);
-            console.log(response.data);
+            const gameData =response.data;
+
+            setGameStatus(gameData);
+            setPlayerMove(gameData.playerMove);
+            setOpponentMove(gameData.opponentMove);
+            console.log(gameData);
+
         } catch (error) {
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        if (playerMove && opponentMove) {
+            Result(playerMove, opponentMove);
+        }
+    }, [playerMove, opponentMove]);
+
+    const Result = (playerMove, opponentMove) => {
+        let result = 'Draw!';
+
+        if (playerMove === opponentMove) {
+            result = 'Draw!';
+        }
+        if (playerMove === 'ROCK') {
+            if (opponentMove === 'SCISSORS') {
+                result = 'p1 wins!';
+            }
+            if (opponentMove === 'PAPER') {
+                result = 'p2 wins!';
+            }
+        }
+        if (playerMove === 'SCISSORS') {
+            if (opponentMove === 'ROCK') {
+                result = 'p2 wins!';
+            }
+            if (opponentMove === 'PAPER') {
+                result = 'p1 wins!';
+            }
+        }
+        if (playerMove === 'PAPER') {
+            if (opponentMove === 'ROCK') {
+                result = 'p1 wins!';
+            }
+            if (opponentMove === 'SCISSORS') {
+                result = 'p2 wins!';
+            }
+        }
+
+        Alert.alert(result, 'GAME OVER', [
+            {
+                text: 'Close',
+                onPress: () => {
+                    navigation.navigate('Home');
+                },
+            },
+        ]);
+    };
+
+
 
     const handleMove = async (sign) => {
         try {
             const gameid = await getData("gameid");
             const token = await getData("token");
 
-            const response = await axios.get(IP_URL + `/games/` + gameid
-                , {
-                    headers: {
-                        token: token,
-                    },
-                });
-            const gameData = response.data;
+            const response = await axios.get(IP_URL + `/games/` + gameid, {
+                headers: {
+                    token: token,
+                },
+            });
 
+            const gameData = response.data;
             const gameContainer = {
                 uuid: gameData.uuid,
                 firstPlayer: gameData.firstPlayer,
@@ -91,7 +121,6 @@ const Game = () => {
                 opponentMove: null,
                 gamestatus: gameData.gamestatus
             };
-
 
             const moveResponse = await MakeMove(token, gameContainer, sign);
             console.log(moveResponse);

@@ -14,7 +14,7 @@ export default function App () {
             <NavigationContainer>
                 <Stacked.Navigator>
 
-                    <Stacked.Screen name='RPS' component={HomePage}/>
+                    <Stacked.Screen name='Home' component={HomePage}/>
                     <Stacked.Screen name='Login' component={LoginPage}/>
                     <Stacked.Screen name='Choose Game' component={GamePage}/>
                     <Stacked.Screen name='Game' component={Game}/>
