@@ -38,13 +38,19 @@ const Game = () => {
     }, []);
 
 
+    useEffect(() => {
+        const interval = setInterval(ResultStatus, 5000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
 
 
     // useEffect(() => {
     //     if (gameResult) {
     //         if (gameResult.result === "WIN") {
     //             Alert.alert("You Win!");
-
+    //
     //         } else if (gameResult.result === "DRAW") {
     //             Alert.alert("It's a Draw!");
     //         } else if (gameResult.result === "LOSE") {
@@ -57,7 +63,7 @@ const Game = () => {
         const gameid = await getData('gameid');
         try {
             const response = await axios.get(IP_URL + `/games/` + gameid);
-            setGameStatus(response.data);
+            setGameStatus(response);
             console.log(response.data);
         } catch (error) {
             console.log(error);
