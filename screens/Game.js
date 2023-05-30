@@ -37,43 +37,22 @@ const Game = () => {
         };
     }, []);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            checkResult();
-        }, 3000);
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
 
-    const checkResult = async () => {
-        const gameid = await getData('gameid');
-        const token = await getData('token');
-        try {
-            const response = await axios.get(IP_URL + `/games/result/${gameid}`,{
-                headers: {
-                    token: token,
-                },
-            });
-            const gameResult = response.data.gamestatus;
-            setGameResult(gameResult);
-            console.log(gameResult);
 
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    useEffect(() => {
-        if (gameResult) {
-            if (gameResult.result === "WIN") {
-                Alert.alert("You Win!");
-            } else if (gameResult.result === "DRAW") {
-                Alert.alert("It's a Draw!");
-            } else if (gameResult.result === "LOSE") {
-                Alert.alert("You Lose!");
-            }
-        }
-    }, [gameResult]);
+
+    // useEffect(() => {
+    //     if (gameResult) {
+    //         if (gameResult.result === "WIN") {
+    //             Alert.alert("You Win!");
+
+    //         } else if (gameResult.result === "DRAW") {
+    //             Alert.alert("It's a Draw!");
+    //         } else if (gameResult.result === "LOSE") {
+    //             Alert.alert("You Lose!");
+    //         }
+    //     }
+    // }, [gameResult]);
+
     const GameStatus = async () => {
         const gameid = await getData('gameid');
         try {
