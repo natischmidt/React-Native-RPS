@@ -31,12 +31,10 @@ const Game = () => {
 
     useEffect(() => {
         const interval = setInterval(GameStatus, 5000);
-
         return () => {
             clearInterval(interval);
         };
     }, []);
-
 
     const GameStatus = async () => {
         const gameid = await getData('gameid');
@@ -50,7 +48,6 @@ const Game = () => {
     };
 
     const handleMove = async (sign) => {
-
         try {
             const gameid = await getData("gameid");
             const token = await getData("token");

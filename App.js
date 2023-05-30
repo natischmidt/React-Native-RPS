@@ -6,8 +6,6 @@ import GamePage from "./screens/GamePage";
 import HomePage from "./screens/HomePage";
 import Game from "./screens/Game";
 
-
-
 const Stacked = createNativeStackNavigator();
 
 export default function App () {

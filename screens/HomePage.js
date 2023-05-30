@@ -44,7 +44,6 @@ const HomePage = () => {
         navigation.navigate('Login');
     };
 
-
     useEffect(() => {
         getToken()
             .then( token => {
@@ -60,13 +59,11 @@ const HomePage = () => {
             <ImageBackground source={require('../assets/background.jpg')} resizeMode="cover" style={styles.background}>
                 <Text style={styles.text}>ROCK paper scissors</Text>
                 <TouchableOpacity style={styles.button} onPress={handlePress}>
-                    <Text style={styles.buttonText}>LET'S LOG IN</Text>
+                    <Text style={styles.buttonText}>WHO ARE YOU</Text>
                 </TouchableOpacity>
             </ImageBackground>
         </View>
-
     )
-
 };
 
 const styles =StyleSheet.create({

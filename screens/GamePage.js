@@ -36,27 +36,6 @@ const JoinGame = async (gameid) => {
 };
 
 
-const GameList = async () => {
-    try {
-        const response = await fetch(IP_URL + '/games', {
-            method: 'GET',
-            headers: {
-                token: await getData('token'),
-            },
-        });
-
-        if (response.ok) {
-            const gameList = await response.json();
-            return gameList.map((game) => ({
-                gameid: game.uuid,
-            }));
-        } else {
-            throw new Error('Failed to fetch game list');
-        }
-    } catch (error) {
-        console.error(error.message);
-    }
-};
 
 const GamePage = () => {
     const navigation = useNavigation();
@@ -64,17 +43,39 @@ const GamePage = () => {
     const [updatedGames, setUpdatedGames] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
 
+
+    const GameList = async () => {
+        try {
+            const response = await fetch(IP_URL + '/games', {
+                method: 'GET',
+                headers: {
+                    token: await getData('token'),
+                },
+            });
+
+            if (response.ok) {
+                const gameList = await response.json();
+                setOpenGames(gameList.map((game) => ({ gameid: game.uuid })));
+            } else {
+                throw new Error('Failed to fetch game list');
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
     useEffect(() => {
-        GameList()
-            .then((game) => {
-                setOpenGames(game);
-            })
-            .catch((error) => console.log(error.message));
-    }, [updatedGames]);
+        const interval = setInterval(() => {
+            GameList();
+        }, 3000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
 
 
     const handleStartGame = async () => {
-
         await StartGame().then((response) => {
             console.log(response);
             storeData('gameid', response.uuid);
@@ -92,8 +93,6 @@ const GamePage = () => {
 
         });
     };
-
-
 
     const renderList = ({ item }) => {
         return (
@@ -118,6 +117,7 @@ const GamePage = () => {
                         keyExtractor={(item) => item.gameid.toString()}
                     />
                     <Button title="Close" onPress={() => setModalVisible(false)} />
+
                 </View>
             </Modal>
         </View>
