@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
-import { Alert, StyleSheet, View } from "react-native";
-import { GameButtons } from "../components/GameButtons";
-import { useNavigation } from "@react-navigation/native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {GameButtons} from "../components/GameButtons";
 
 const MakeMove = async (token, gameContainer, sign) => {
     try {
@@ -23,49 +22,44 @@ const MakeMove = async (token, gameContainer, sign) => {
     }
 };
 
+
 const Game = () => {
     const [playerMove, setPlayerMove] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
     const [result, setResult] = useState("");
     const [gameStatus, setGameStatus] = useState(null);
-    const navigation = useNavigation();
 
     useEffect(() => {
-        const interval = setInterval(GameStatus, 2000);
+        const interval = setInterval(GameStatus, 5000);
         return () => {
             clearInterval(interval);
         };
     }, []);
 
-
     const GameStatus = async () => {
         const gameid = await getData('gameid');
         try {
             const response = await axios.get(IP_URL + `/games/` + gameid);
-            const gameData =response.data;
-            setGameStatus(gameData);
-            setPlayerMove(gameData.playerMove);
-            setOpponentMove(gameData.opponentMove);
-            console.log(gameData.playerMove,gameData.opponentMove);
-
+            setGameStatus(response.data);
+            console.log(response.data);
         } catch (error) {
             console.log(error);
         }
     };
-
 
     const handleMove = async (sign) => {
         try {
             const gameid = await getData("gameid");
             const token = await getData("token");
 
-            const response = await axios.get(IP_URL + `/games/` + gameid, {
-                headers: {
-                    token: token,
-                },
-            });
-
+            const response = await axios.get(IP_URL + `/games/` + gameid
+                , {
+                    headers: {
+                        token: token,
+                    },
+                });
             const gameData = response.data;
+
             const gameContainer = {
                 uuid: gameData.uuid,
                 firstPlayer: gameData.firstPlayer,
@@ -74,6 +68,7 @@ const Game = () => {
                 opponentMove: null,
                 gamestatus: gameData.gamestatus
             };
+
 
             const moveResponse = await MakeMove(token, gameContainer, sign);
             console.log(moveResponse);
@@ -113,3 +108,4 @@ const styles = StyleSheet.create({
 });
 
 export default Game;
+
