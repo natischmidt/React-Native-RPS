@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { GameButtons } from "../components/GameButtons";
 
 const MakeMove = async (token, gameContainer, sign) => {
@@ -48,15 +48,17 @@ const Game = () => {
 
                 if (gameData.firstPlayer.uuid === token) {
                     setPlayer(gameData.firstPlayer.username);
+                    console.log(gameData.firstPlayer.username)
                     setOpponent(gameData.secondPlayer.username);
+                    console.log(gameData.secondPlayer.username)
                 } else if (gameData.secondPlayer.uuid === token) {
                     setPlayer(gameData.secondPlayer.username);
                     setOpponent(gameData.firstPlayer.username);
                 }
 
                 if (gameData.playerMove && gameData.opponentMove) {
-
                     Result(gameData.playerMove, gameData.opponentMove);
+                    console.log(gameData.playerMove,gameData.opponentMove);
                 }
             } catch (error) {
                 console.log(error);
@@ -81,7 +83,6 @@ const Game = () => {
             result = "You lost!";
         }
 
-        // Display an alert with the result
         alert(result);
     };
     // const GameStatus = async () => {
