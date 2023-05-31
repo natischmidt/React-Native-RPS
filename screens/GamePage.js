@@ -40,8 +40,8 @@ const JoinGame = async (gameid) => {
 const GamePage = () => {
     const navigation = useNavigation();
     const [openGames, setOpenGames] = useState([]);
-    const [updatedGames, setUpdatedGames] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+
 
 
     const GameList = async () => {
