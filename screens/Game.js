@@ -31,74 +31,27 @@ const Game = () => {
     const navigation = useNavigation();
 
     useEffect(() => {
-        const interval = setInterval(GameStatus, 1000);
+        const interval = setInterval(GameStatus, 2000);
         return () => {
             clearInterval(interval);
         };
     }, []);
+
+
     const GameStatus = async () => {
         const gameid = await getData('gameid');
         try {
             const response = await axios.get(IP_URL + `/games/` + gameid);
             const gameData =response.data;
-
             setGameStatus(gameData);
             setPlayerMove(gameData.playerMove);
             setOpponentMove(gameData.opponentMove);
-            console.log(gameData);
+            console.log(gameData.playerMove,gameData.opponentMove);
 
         } catch (error) {
             console.log(error);
         }
     };
-
-    useEffect(() => {
-        if (playerMove && opponentMove) {
-            Result(playerMove, opponentMove);
-        }
-    }, [playerMove, opponentMove]);
-
-    const Result = (playerMove, opponentMove) => {
-        let result = 'Draw!';
-
-        if (playerMove === opponentMove) {
-            result = 'Draw!';
-        }
-        if (playerMove === 'ROCK') {
-            if (opponentMove === 'SCISSORS') {
-                result = 'p1 wins!';
-            }
-            if (opponentMove === 'PAPER') {
-                result = 'p2 wins!';
-            }
-        }
-        if (playerMove === 'SCISSORS') {
-            if (opponentMove === 'ROCK') {
-                result = 'p2 wins!';
-            }
-            if (opponentMove === 'PAPER') {
-                result = 'p1 wins!';
-            }
-        }
-        if (playerMove === 'PAPER') {
-            if (opponentMove === 'ROCK') {
-                result = 'p1 wins!';
-            }
-            if (opponentMove === 'SCISSORS') {
-                result = 'p2 wins!';
-            }
-        }
-
-        Alert.alert(result, 'GAME OVER', [
-            {
-                text: 'Close',
-                onPress: () => {
-                    navigation.navigate('Home');
-                },
-            },
-        ]);
-    };
-
 
 
     const handleMove = async (sign) => {
