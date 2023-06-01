@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
-import { StyleSheet, View } from "react-native";
-import { GameButtons } from "../components/GameButtons";
+import {Image, StyleSheet, TouchableOpacity, View} from "react-native";
 
 const MakeMove = async (token, gameContainer, sign) => {
     try {
@@ -31,71 +30,18 @@ const Game = () => {
     const [gameStatus, setGameStatus] = useState(null);
 
 
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            try {
-                const gameid = await getData('gameid');
-                const token = await getData('token');
 
-                const response = await axios.get(IP_URL + `/games/${gameid}`, {
-                    headers: {
-                        token: token,
-                    },
-                });
-
-                const gameData = response.data;
-
-
-                if (gameData.firstPlayer.uuid === token) {
-                    setPlayer(gameData.firstPlayer.username);
-                    console.log(gameData.firstPlayer.username)
-                    setOpponent(gameData.secondPlayer.username);
-                    console.log(gameData.secondPlayer.username)
-                } else if (gameData.secondPlayer.uuid === token) {
-                    setPlayer(gameData.secondPlayer.username);
-                    setOpponent(gameData.firstPlayer.username);
-                }
-
-                if (gameData.playerMove && gameData.opponentMove) {
-                    Result(gameData.playerMove, gameData.opponentMove);
-                    console.log(gameData.playerMove,gameData.opponentMove);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, []);
-
-    const Result = (playerMove, opponentMove) => {
-
-        let result;
-        if (playerMove === opponentMove) {
-            result = "It's a tie!";
-        } else if (
-            (playerMove === "rock" && opponentMove === "scissors") ||
-            (playerMove === "paper" && opponentMove === "rock") ||
-            (playerMove === "scissors" && opponentMove === "paper")
-        ) {
-            result = "You won!";
-        } else {
-            result = "You lost!";
+    const GameStatus = async () => {
+        const gameid = await getData('gameid');
+        try {
+            const response = await axios.get(IP_URL + `/games/` + gameid);
+            setGameStatus(response.data);
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            console.log(error);
         }
-
-        alert(result);
     };
-    // const GameStatus = async () => {
-    //     const gameid = await getData('gameid');
-    //     try {
-    //         const response = await axios.get(IP_URL + `/games/` + gameid);
-    //         setGameStatus(response.data);
-    //         console.log(response.data);
-    //         return response.data;
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
 
     const handleMove = async (sign) => {
         try {
@@ -123,6 +69,7 @@ const Game = () => {
 
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
+
             setResult(moveResponse.result);
         } catch (error) {
             console.log(error);
@@ -131,7 +78,15 @@ const Game = () => {
 
     return (
         <View style={styles.container}>
-            <GameButtons handleMove={handleMove} />
+                <TouchableOpacity onPress={() => handleMove("rock")}>
+                    <Image source={require("../images/rock.png.bmp")} style={[styles.image, styles.choiceImage]}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleMove("scissors")}>
+                    <Image source={require("../images/scissor.png.bmp")} style={[styles.image, styles.choiceImage]}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleMove("paper")}>
+                    <Image source={require("../images/paper.png.bmp")} style={[styles.image, styles.choiceImage]}/>
+                </TouchableOpacity>
         </View>
     );
 };
@@ -153,6 +108,7 @@ const styles = StyleSheet.create({
         height: 180,
         resizeMode: 'contain',
     },
+
 });
 
 export default Game;
