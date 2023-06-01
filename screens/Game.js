@@ -21,7 +21,6 @@ const MakeMove = async (token, gameContainer, sign) => {
     }
 };
 
-
 const Game = () => {
     const [playerMove, setPlayerMove] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
@@ -54,25 +53,38 @@ const Game = () => {
             const gameid = await getData("gameid");
             const token = await getData("token");
 
-            const response = await axios.get(IP_URL + `/games/` + gameid
-                , {
-                    headers: {
-                        token: token,
-                    },
-                });
+            const response = await axios.get(IP_URL + `/games/` + gameid , {
+                headers: {
+                    token: token,
+                    'Content-Type': 'application/json',
+                },
+            });
             const gameData = response.data;
+
+            console.log(gameData.firstPlayer, gameData.secondPlayer, gameData.playerMove, gameData.opponentMove);
 
             const gameContainer = {
                 uuid: gameData.uuid,
                 firstPlayer: gameData.firstPlayer,
-                playerMove: null,
+                playerMove: gameData.playerMove,
                 secondPlayer: gameData.secondPlayer,
-                opponentMove: null,
-                gamestatus: gameData.gamestatus
+                opponentMove: gameData.opponentMove,
+                gameStatus: gameData.gameStatus
             };
 
+            console.log(
+                 gameData.firstPlayer, gameData.secondPlayer,
+                gameData.playerMove, gameData.opponentMove
+                )
 
-            const moveResponse = await MakeMove(token, gameContainer, sign);
+            if (gameData.firstPlayer.token === token) {
+                gameContainer.playerMove = sign.toUpperCase();
+            } else if (gameData.secondPlayer.token === token) {
+                gameContainer.opponentMove = sign.toUpperCase();
+            }
+
+
+            const moveResponse = await MakeMove(token, gameContainer, sign.toUpperCase());
             console.log(moveResponse);
 
 
@@ -91,7 +103,7 @@ const Game = () => {
                 <TouchableOpacity onPress={() => handleMove("rock")}>
                     <Image source={require("../images/rock.png.bmp")} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleMove("scissors")}>
+                <TouchableOpacity onPress={() => handleMove("scissor")}>
                     <Image source={require("../images/scissor.png.bmp")} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleMove("paper")}>
