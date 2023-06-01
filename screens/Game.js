@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
@@ -21,74 +21,45 @@ const MakeMove = async (token, gameContainer, sign) => {
     }
 };
 
+
 const Game = () => {
     const [playerMove, setPlayerMove] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
     const [result, setResult] = useState("");
     const [gameStatus, setGameStatus] = useState(null);
-    const [opponent, setOpponent] = useState("");
-    const [player, setPlayer] = useState("");
-
 
     useEffect(() => {
-        const interval = setInterval(async () => {
-            await fetchGameStatus().then(async (res) => {
-                if (res.firstPlayer && res.firstPlayer.token === (await getData('token'))) {
-                    setOpponent(res.secondPlayer);
-                    setPlayer(res.firstPlayer);
-                }
-                if (res.secondPlayer && res.secondPlayer.token === (await getData('token'))) {
-                    setOpponent(res.firstPlayer);
-                    setPlayer(res.secondPlayer);
-                }
+        const interval = setInterval(GameStatus, 5000);
 
-                if (res.firstPlayer && res.secondPlayer) {
-                    return clearInterval(interval);
-                }
-            })
-                .catch(e => console.log(e.message));
-        }, 1000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
 
-        if (opponent) {
-            const newInterval = setInterval(async () => {
-                await fetchGameStatus().then(async (res) => {
 
-                    if (res.playerMove && res.opponentMove) {
-                        setPlayerMove(res.playerMove);
-                        setOpponentMove(res.opponentMove);
-                        setResult(res.gamestatus);
-                        clearInterval(newInterval);
-                    }
-                });
-            }, 1000);
-        }
-    }, [opponent]);
-
-    const fetchGameStatus = async () => {
+    const GameStatus = async () => {
         const gameid = await getData('gameid');
         try {
-            const response = await axios.get(IP_URL + `/games/${gameid}`, {
-                headers: {
-                    token: await getData('token'),
-                },
-            });
+            const response = await axios.get(IP_URL + `/games/` + gameid);
             setGameStatus(response.data);
-            return response.data;
+            console.log(response.data);
         } catch (error) {
             console.log(error);
         }
     };
 
     const handleMove = async (sign) => {
+
         try {
             const gameid = await getData("gameid");
             const token = await getData("token");
 
-            const response = await axios.get(IP_URL + `/games/${gameid}`, {
-                headers: {
-                    token: token,
-                },
-            });
+            const response = await axios.get(IP_URL + `/games/` + gameid
+                , {
+                    headers: {
+                        token: token,
+                    },
+                });
             const gameData = response.data;
 
             const gameContainer = {
@@ -100,14 +71,16 @@ const Game = () => {
                 gamestatus: gameData.gamestatus
             };
 
+
             const moveResponse = await MakeMove(token, gameContainer, sign);
             console.log(moveResponse);
+
 
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
             setResult(moveResponse.result);
-
         } catch (error) {
+
             console.log(error);
         }
     };
@@ -130,11 +103,7 @@ const Game = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "flex-start",
-    },
+    container: {},
     choicesContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
