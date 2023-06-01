@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-
 
 const MakeMove = async (token, gameContainer, sign) => {
     try {
@@ -22,45 +21,74 @@ const MakeMove = async (token, gameContainer, sign) => {
     }
 };
 
-
 const Game = () => {
     const [playerMove, setPlayerMove] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
     const [result, setResult] = useState("");
     const [gameStatus, setGameStatus] = useState(null);
+    const [opponent, setOpponent] = useState("");
+    const [player, setPlayer] = useState("");
+    const [timer, setTimer] = useState(30);
 
     useEffect(() => {
-        const interval = setInterval(GameStatus, 5000);
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
+        const interval = setInterval(async () => {
+            await fetchGameStatus().then(async (res) => {
+                if (res.firstPlayer && res.firstPlayer.token === (await getData('token'))) {
+                    setOpponent(res.secondPlayer);
+                    setPlayer(res.firstPlayer);
+                }
+                if (res.secondPlayer && res.secondPlayer.token === (await getData('token'))) {
+                    setOpponent(res.firstPlayer);
+                    setPlayer(res.secondPlayer);
+                }
 
-    const GameStatus = async () => {
+                if (res.firstPlayer && res.secondPlayer) {
+                    return clearInterval(interval);
+                }
+            })
+                .catch(e => console.log(e.message));
+        }, 1000);
+
+        if (opponent) {
+            const newInterval = setInterval(async () => {
+                await fetchGameStatus().then(async (res) => {
+
+                    if (res.playerMove && res.opponentMove) {
+                        setPlayerMove(res.playerMove);
+                        setOpponentMove(res.opponentMove);
+                        setResult(res.gamestatus);
+                        clearInterval(newInterval);
+                    }
+                });
+            }, 1000);
+        }
+    }, [opponent]);
+
+    const fetchGameStatus = async () => {
         const gameid = await getData('gameid');
         try {
-            const response = await axios.get(IP_URL + `/games/` + gameid);
+            const response = await axios.get(IP_URL + `/games/${gameid}`, {
+                headers: {
+                    token: await getData('token'),
+                },
+            });
             setGameStatus(response.data);
-            console.log(response.data);
             return response.data;
         } catch (error) {
             console.log(error);
         }
     };
 
-
     const handleMove = async (sign) => {
-
         try {
             const gameid = await getData("gameid");
             const token = await getData("token");
 
-            const response = await axios.get(IP_URL + `/games/` + gameid
-                , {
-                    headers: {
-                        token: token,
-                    },
-                });
+            const response = await axios.get(IP_URL + `/games/${gameid}`, {
+                headers: {
+                    token: token,
+                },
+            });
             const gameData = response.data;
 
             const gameContainer = {
@@ -75,41 +103,35 @@ const Game = () => {
             const moveResponse = await MakeMove(token, gameContainer, sign);
             console.log(moveResponse);
 
-
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
             setResult(moveResponse.result);
 
         } catch (error) {
-
             console.log(error);
         }
     };
 
-
-
     return (
         <View style={styles.container}>
             <View style={styles.choicesContainer}>
-                <View style={styles.choicesContainer}>
-                    <TouchableOpacity onPress={() => handleMove("rock")}>
-                        <Image source={require("../images/rock.png.bmp")} style={[styles.image, styles.choiceImage]}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleMove("scissors")}>
-                        <Image source={require("../images/scissor.png.bmp")} style={[styles.image, styles.choiceImage]}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleMove("paper")}>
-                        <Image source={require("../images/paper.png.bmp")} style={[styles.image, styles.choiceImage]}/>
-                    </TouchableOpacity>
-                </View>
-
+                <TouchableOpacity onPress={() => handleMove("rock")}>
+                    <Image source={require("../images/rock.png.bmp")} style={[styles.image, styles.choiceImage]} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleMove("scissors")}>
+                    <Image source={require("../images/scissor.png.bmp")} style={[styles.image, styles.choiceImage]} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleMove("paper")}>
+                    <Image source={require("../images/paper.png.bmp")} style={[styles.image, styles.choiceImage]} />
+                </TouchableOpacity>
             </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1,
+    container: {
+        flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
     },
@@ -136,5 +158,3 @@ const styles = StyleSheet.create({
 });
 
 export default Game;
-
-
