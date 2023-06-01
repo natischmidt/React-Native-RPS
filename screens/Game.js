@@ -28,7 +28,7 @@ const Game = () => {
     const [gameStatus, setGameStatus] = useState(null);
     const [opponent, setOpponent] = useState("");
     const [player, setPlayer] = useState("");
-    const [timer, setTimer] = useState(30);
+
 
     useEffect(() => {
         const interval = setInterval(async () => {
