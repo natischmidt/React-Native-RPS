@@ -67,7 +67,7 @@ const GamePage = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             GameList();
-        }, 3000);
+        }, 1000);
 
         return () => {
             clearInterval(interval);
