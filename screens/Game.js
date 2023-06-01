@@ -72,7 +72,6 @@ const Game = () => {
                 gamestatus: gameData.gamestatus
             };
 
-
             const moveResponse = await MakeMove(token, gameContainer, sign);
             console.log(moveResponse);
 
