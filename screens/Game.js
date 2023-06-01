@@ -48,50 +48,45 @@ const Game = () => {
         }
     };
 
+
     const handleMove = async (sign) => {
+
         try {
             const gameid = await getData("gameid");
             const token = await getData("token");
 
-            const response = await axios.get(IP_URL + `/games/` + gameid, {
-                headers: {
-                    token: token,
-                },
-            });
+            const response = await axios.get(IP_URL + `/games/` + gameid
+                , {
+                    headers: {
+                        token: token,
+                    },
+                });
             const gameData = response.data;
 
-            let gameContainer = {
+            const gameContainer = {
                 uuid: gameData.uuid,
                 firstPlayer: gameData.firstPlayer,
                 playerMove: null,
                 secondPlayer: gameData.secondPlayer,
                 opponentMove: null,
-                gamestatus: gameData.gamestatus,
+                gamestatus: gameData.gamestatus
             };
 
-
-            if (gameData.firstPlayer.uuid === token) {
-                gameContainer = {
-                    ...gameContainer,
-                    playerMove: sign,
-                };
-            } else if (gameData.secondPlayer.uuid === token) {
-                gameContainer = {
-                    ...gameContainer,
-                    opponentMove: sign,
-                };
-            }
 
             const moveResponse = await MakeMove(token, gameContainer, sign);
             console.log(moveResponse);
 
+
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
             setResult(moveResponse.result);
+
         } catch (error) {
+
             console.log(error);
         }
     };
+
 
 
     return (
