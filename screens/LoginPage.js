@@ -14,7 +14,7 @@ const LoginPage = () => {
             const token = await AsyncStorage.getItem('token');
 
             const response = await axios.post(
-                IP_URL + '/user/name',
+                IP_URL + '/players/name',
                 { name },
                 {
                     headers: {

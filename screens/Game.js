@@ -3,6 +3,7 @@ import axios from 'axios';
 import IP_URL from "../services/IP";
 import {getData} from "./HomePage";
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -22,17 +23,26 @@ const Game = () => {
     }, []);
 
     const GameStatus = async () => {
-        const gameid = await getData('gameid');
         try {
-            const response = await axios.get(IP_URL + '/games/' + gameid);
+            const token = await AsyncStorage.getItem('token');
+
+            const response = await axios.get(
+                IP_URL + '/games/status/',
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token,
+                    }
+                }
+            );
 
             setGameStatus(response.data);
             console.log(response.data);
-
         } catch (error) {
             console.log(error);
         }
     };
+
 
 
 

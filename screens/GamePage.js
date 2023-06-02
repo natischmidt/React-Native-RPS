@@ -3,18 +3,18 @@ import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import IP_URL from '../services/IP';
 import { getData, storeData } from './HomePage';
-
-
+import axios from 'axios';
 
 const StartGame = async () => {
     try {
-        return fetch(IP_URL + '/games/start', {
-            method: 'POST',
+        const token = await getData('token');
+        const response = await axios.post(`${IP_URL}/games/start`, null, {
             headers: {
                 'Content-Type': 'application/json',
-                token: await getData('token'),
+                token,
             },
-        }).then((response) => response.json());
+        });
+        return response.data;
     } catch (err) {
         console.log(err.message);
     }
@@ -22,40 +22,36 @@ const StartGame = async () => {
 
 const JoinGame = async (gameid) => {
     try {
-        return fetch(IP_URL + '/join/' + gameid, {
-            method: 'POST',
+        const token = await getData('token');
+        const response = await axios.post(`${IP_URL}/join/${gameid}`, null, {
             headers: {
                 'Content-Type': 'application/json',
-                token: await getData('token'),
-                gameid: gameid,
+                token,
             },
-        }).then((response) => response.json());
+        });
+        return response.data;
     } catch (err) {
         console.log(err.message);
     }
 };
-
-
 
 const GamePage = () => {
     const navigation = useNavigation();
     const [openGames, setOpenGames] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
 
-
-
     const GameList = async () => {
         try {
-            const response = await fetch(IP_URL + '/games', {
-                method: 'GET',
+            const token = await getData('token');
+            const response = await axios.get(`${IP_URL}/games/listAll`, {
                 headers: {
-                    token: await getData('token'),
+                    token,
                 },
             });
 
-            if (response.ok) {
-                const gameList = await response.json();
-                setOpenGames(gameList.map((game) => ({ gameid: game.uuid })));
+            if (response.status === 200) {
+                const gameList = response.data;
+                setOpenGames(gameList);
             } else {
                 throw new Error('Failed to fetch game list');
             }
@@ -74,11 +70,10 @@ const GamePage = () => {
         };
     }, []);
 
-
     const handleStartGame = async () => {
         await StartGame().then((response) => {
             console.log(response);
-            storeData('gameid', response.uuid);
+            storeData('gameid', response.gameStatusId);
             console.log('Started Game');
             navigation.navigate('Game');
         });
@@ -87,18 +82,17 @@ const GamePage = () => {
     const handleJoin = async (gameid) => {
         await JoinGame(gameid).then((response) => {
             console.log(response);
-            storeData('gameid', response.uuid);
+            storeData('gameid', response.gameStatusId);
             console.log('Navigating to Game');
             navigation.navigate('Game');
-
         });
     };
 
     const renderList = ({ item }) => {
         return (
             <View style={styles.gameItem}>
-                <Text>{item.gameid}</Text>
-                <Button title="Join" onPress={() => handleJoin(item.gameid)} />
+                <Text>{item.gameStatusId}</Text>
+                <Button title="Join" onPress={() => handleJoin(item.gameStatusId)} />
             </View>
         );
     };
@@ -114,10 +108,9 @@ const GamePage = () => {
                     <FlatList
                         data={openGames}
                         renderItem={renderList}
-                        keyExtractor={(item) => item.gameid.toString()}
+                        keyExtractor={(item) => item.gameStatusId}
                     />
                     <Button title="Close" onPress={() => setModalVisible(false)} />
-
                 </View>
             </Modal>
         </View>
