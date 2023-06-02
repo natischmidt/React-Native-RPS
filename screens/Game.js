@@ -24,9 +24,11 @@ const Game = () => {
     const GameStatus = async () => {
         const gameid = await getData('gameid');
         try {
-            const response = await axios.get(IP_URL + `/games/` + gameid);
+            const response = await axios.get(IP_URL + '/games/' + gameid);
+
             setGameStatus(response.data);
             console.log(response.data);
+
         } catch (error) {
             console.log(error);
         }
@@ -42,16 +44,16 @@ const Game = () => {
             const gameContainer = {
                 uuid: gameid,
                 playerMove: sign,
-                opponentMove: null,
             };
 
             console.log(gameContainer.playerMove);
 
-            const response = await axios.post(`${IP_URL}/games/move/${sign}`, gameContainer, {
+            const response = await axios.post(IP_URL + '/games/move/' + sign, gameContainer, {
                 headers: {
                     'Content-Type': 'application/json',
                     'token': token,
                 },
+
             });
 
             if (response.status !== 200) {
@@ -62,12 +64,14 @@ const Game = () => {
             const moveResponse = response.data;
 
             console.log(moveResponse);
+            console.log(gameContainer)
             console.log(sign);
             console.log(playerMove, opponentMove)
 
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
             setResult(moveResponse.result);
+
 
         } catch (error) {
             console.log(error);
