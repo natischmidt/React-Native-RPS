@@ -5,28 +5,36 @@ import {getData} from "./HomePage";
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
 
-const makeMove = async (token, gameContainer, sign) => {
-    try {
-        const response = await fetch(IP_URL + `/games/move/` + sign, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'token': await getData('token'),
-            },
-            body: JSON.stringify(gameContainer),
-        });
+// const makeMove = async (token, gameContainer, sign) => {
+//     try {
+//         const response = await fetch(IP_URL + `/games/move/` + sign, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'token': await getData('token'),
+//             },
+//             body: JSON.stringify(gameContainer),
+//         });
+//
+//         if (!response.ok) {
+//             console.error(response)
+//             throw new Error('Failed to make a move');
+//         }
+//
+//         return await response.json();
+//     } catch (err) {
+//         console.log(err.message);
+//         throw err;
+//     }
+// };
 
-        if (!response.ok) {
-            console.error(response)
-            throw new Error('Failed to make a move');
-        }
-
-        return await response.json();
-    } catch (err) {
-        console.log(err.message);
-        throw err;
-    }
-};
+const makeMove = async (token, gameContainer, sign) =>
+{ try { const response = await axios.post(`${IP_URL}/games/move/${sign}`, gameContainer,
+    { headers: { 'Content-Type': 'application/json',
+            'token': await getData('token'), }, });
+    if (!response.status === 200) { console.error(response);
+        throw new Error('Failed to make a move'); }
+    return response.data; } catch (error) { console.log(error.message); throw error; } };
 
 
 
@@ -70,16 +78,18 @@ const Game = () => {
             const gameContainer = {
                 uuid: gameData.uuid,
                 firstPlayer: gameData.firstPlayer,
-                playerMove: null,
+                playerMove: sign,
                 secondPlayer: gameData.secondPlayer,
                 opponentMove: null,
                 gameStatus: gameData.gameStatus,
             };
 
-            console.log(gameContainer);
+            console.log(gameContainer.playerMove);
 
             const moveResponse = await makeMove(token, gameContainer, sign);
+
             console.log(moveResponse);
+            console.log(sign);
 
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
