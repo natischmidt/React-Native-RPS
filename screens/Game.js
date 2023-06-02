@@ -68,7 +68,7 @@ const Game = () => {
 
             const moveResponse = await makeMove(token, gameContainer, sign);
 
-            console.log(moveResponse);
+            console.log(moveResponse); //is logging correclty but not mapping to api
             console.log(sign);
 
             setPlayerMove(moveResponse.playerMove);
