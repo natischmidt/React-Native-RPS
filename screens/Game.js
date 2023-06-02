@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
 import { getData } from "./HomePage";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View,Text } from "react-native";
 
 const MakeMove = async (token, gameContainer, sign) => {
     try {
@@ -20,6 +20,7 @@ const MakeMove = async (token, gameContainer, sign) => {
         console.log(err.message);
     }
 };
+
 
 const Game = () => {
     const [playerMove, setPlayerMove] = useState("");
@@ -39,7 +40,7 @@ const Game = () => {
     const GameStatus = async () => {
         const gameid = await getData('gameid');
         try {
-            const response = await axios.get(IP_URL + `/games/` + gameid);
+            const response = await axios.get(IP_URL + `/games/` +gameid );
             setGameStatus(response.data);
             console.log(response.data);
         } catch (error) {
@@ -53,38 +54,25 @@ const Game = () => {
             const gameid = await getData("gameid");
             const token = await getData("token");
 
-            const response = await axios.get(IP_URL + `/games/` + gameid , {
-                headers: {
-                    token: token,
-                    'Content-Type': 'application/json',
-                },
-            });
+            const response = await axios.get(IP_URL + `/games/` + gameid
+                , {
+                    headers: {
+                        token: token,
+                    },
+                });
             const gameData = response.data;
-
-            console.log(gameData.firstPlayer, gameData.secondPlayer, gameData.playerMove, gameData.opponentMove);
 
             const gameContainer = {
                 uuid: gameData.uuid,
                 firstPlayer: gameData.firstPlayer,
-                playerMove: gameData.playerMove,
+                playerMove: null,
                 secondPlayer: gameData.secondPlayer,
-                opponentMove: gameData.opponentMove,
-                gameStatus: gameData.gameStatus
+                opponentMove: null,
+                gamestatus: gameData.gamestatus
             };
 
-            console.log(
-                 gameData.firstPlayer, gameData.secondPlayer,
-                gameData.playerMove, gameData.opponentMove
-                )
 
-            if (gameData.firstPlayer.token === token) {
-                gameContainer.playerMove = sign.toUpperCase();
-            } else if (gameData.secondPlayer.token === token) {
-                gameContainer.opponentMove = sign.toUpperCase();
-            }
-
-
-            const moveResponse = await MakeMove(token, gameContainer, sign.toUpperCase());
+            const moveResponse = await MakeMove(token, gameContainer, sign);
             console.log(moveResponse);
 
 
@@ -96,6 +84,7 @@ const Game = () => {
             console.log(error);
         }
     };
+
 
     return (
         <View style={styles.container}>
@@ -109,6 +98,7 @@ const Game = () => {
                 <TouchableOpacity onPress={() => handleMove("paper")}>
                     <Image source={require("../images/paper.png.bmp")} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
+                <Text style={styles.resultText}>{result}</Text>
             </View>
         </View>
     );
@@ -135,6 +125,11 @@ const styles = StyleSheet.create({
         width: 150,
         height: 180,
         resizeMode: 'contain',
+    },
+    resultText: {
+        fontSize: 24,
+        fontWeight: "bold",
+        marginTop: 20,
     },
 });
 
