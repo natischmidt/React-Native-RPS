@@ -17,6 +17,7 @@ const makeMove = async (token, gameContainer, sign) => {
         });
 
         if (!response.ok) {
+            console.error(response)
             throw new Error('Failed to make a move');
         }
 
@@ -92,13 +93,13 @@ const Game = () => {
     return (
         <View style={styles.container}>
             <View style={styles.choicesContainer}>
-                <TouchableOpacity onPress={() => handleMove("rock")}>
+                <TouchableOpacity onPress={() => handleMove("ROCK")}>
                     <Image source={require("../images/rock.png.bmp")} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleMove("scissor")}>
+                <TouchableOpacity onPress={() => handleMove("SCISSOR")}>
                     <Image source={require("../images/scissor.png.bmp")} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleMove("paper")}>
+                <TouchableOpacity onPress={() => handleMove("PAPER")}>
                     <Image source={require("../images/paper.png.bmp")} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
                 <Text style={styles.resultText}>{result}</Text>
