@@ -4,36 +4,48 @@ import { useNavigation } from '@react-navigation/native';
 import IP_URL from '../services/IP';
 import { getData, storeData } from './HomePage';
 import axios from 'axios';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StartGame = async () => {
     try {
-        const token = await getData('token');
+        const token = await AsyncStorage.getItem('token');
+
         const response = await axios.post(`${IP_URL}/games/start`, null, {
             headers: {
                 'Content-Type': 'application/json',
                 token,
             },
         });
+
+        console.log(response.data);
         return response.data;
-    } catch (err) {
-        console.log(err.message);
+    } catch (error) {
+        console.log(error);
+        return null;
     }
 };
 
-const JoinGame = async (gameid) => {
+
+
+const JoinGame = async (gameId) => {
     try {
-        const token = await getData('token');
-        const response = await axios.post(`${IP_URL}/join/${gameid}`, null, {
+        const token = await AsyncStorage.getItem('token');
+
+        const response = await axios.get(`${IP_URL}/games/join/${gameId}`, {
             headers: {
                 'Content-Type': 'application/json',
                 token,
             },
         });
+
+        console.log(response.data);
         return response.data;
-    } catch (err) {
-        console.log(err.message);
+    } catch (error) {
+        console.log(error);
+        return null;
     }
 };
+
 
 const GamePage = () => {
     const navigation = useNavigation();
@@ -58,7 +70,9 @@ const GamePage = () => {
         } catch (error) {
             console.error(error.message);
         }
-    };
+
+
+    }
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -72,8 +86,10 @@ const GamePage = () => {
 
     const handleStartGame = async () => {
         await StartGame().then((response) => {
-            console.log(response);
-            storeData('gameid', response.gameStatusId);
+            console.log('this is the' + response);
+            console.log('this is the response.data' + response.data);
+            // console.log(response.data)
+            storeData('gameid', response);
             console.log('Started Game');
             navigation.navigate('Game');
         });

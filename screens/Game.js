@@ -27,7 +27,7 @@ const Game = () => {
             const token = await AsyncStorage.getItem('token');
 
             const response = await axios.get(
-                IP_URL + '/games/status/',
+                IP_URL + '/games/status',
                 {
                     headers: {
                         'Content-Type': 'application/json',
