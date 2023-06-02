@@ -7,7 +7,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
 const makeMove = async (token, gameContainer, sign) => {
     try {
-        const response = await fetch(`${IP_URL}/games/move/${sign}`, {
+        const response = await fetch(IP_URL + `/games/move/` + sign, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const Game = () => {
     const GameStatus = async () => {
         const gameid = await getData('gameid');
         try {
-            const response = await axios.get(`${IP_URL}/games/${gameid}`);
+            const response = await axios.get(IP_URL + `/games/` + gameid);
             setGameStatus(response.data);
             console.log(response.data);
         } catch (error) {
