@@ -1,25 +1,32 @@
 import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
-import { getData } from "./HomePage";
-import { Image, StyleSheet, TouchableOpacity, View,Text } from "react-native";
+import {getData} from "./HomePage";
+import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
-const MakeMove = async (token, gameContainer, sign) => {
+
+const makeMove = async (token, gameContainer, sign) => {
     try {
-        return fetch(IP_URL + `/games/move/${sign}`, {
+        const response = await fetch(`${IP_URL}/games/move/${sign}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                token: await getData('token'),
+                'token': await getData('token'),
             },
             body: JSON.stringify(gameContainer),
-        })
-            .then((response) => response.json())
-            .then((data) => data);
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to make a move');
+        }
+
+        return await response.json();
     } catch (err) {
         console.log(err.message);
+        throw err;
     }
 };
+
 
 
 const Game = () => {
@@ -29,18 +36,16 @@ const Game = () => {
     const [gameStatus, setGameStatus] = useState(null);
 
     useEffect(() => {
-        const interval = setInterval(GameStatus, 5000);
-
+        const interval = setInterval(GameStatus, 2000);
         return () => {
             clearInterval(interval);
         };
     }, []);
 
-
     const GameStatus = async () => {
         const gameid = await getData('gameid');
         try {
-            const response = await axios.get(IP_URL + `/games/` +gameid );
+            const response = await axios.get(`${IP_URL}/games/${gameid}`);
             setGameStatus(response.data);
             console.log(response.data);
         } catch (error) {
@@ -49,17 +54,16 @@ const Game = () => {
     };
 
     const handleMove = async (sign) => {
-
         try {
             const gameid = await getData("gameid");
             const token = await getData("token");
 
-            const response = await axios.get(IP_URL + `/games/` + gameid
-                , {
-                    headers: {
-                        token: token,
-                    },
-                });
+            const response = await axios.get(`${IP_URL}/games/${gameid}`, {
+                headers: {
+                    'token': token,
+                },
+            });
+
             const gameData = response.data;
 
             const gameContainer = {
@@ -68,19 +72,18 @@ const Game = () => {
                 playerMove: null,
                 secondPlayer: gameData.secondPlayer,
                 opponentMove: null,
-                gamestatus: gameData.gamestatus
+                gameStatus: gameData.gameStatus,
             };
 
+            console.log(gameContainer);
 
-            const moveResponse = await MakeMove(token, gameContainer, sign);
+            const moveResponse = await makeMove(token, gameContainer, sign);
             console.log(moveResponse);
-
 
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
             setResult(moveResponse.result);
         } catch (error) {
-
             console.log(error);
         }
     };
@@ -111,14 +114,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: 20,
     },
-    choiceButton: {
-        width: 130,
-        height: 80,
-        borderRadius: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
-    },
+    choiceButton: {},
     image: {},
     choiceImage: {
         marginTop: 400,
@@ -134,3 +130,4 @@ const styles = StyleSheet.create({
 });
 
 export default Game;
+
