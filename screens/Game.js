@@ -6,26 +6,26 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
 
 
-const makeMove = async (token, gameContainer, sign) => {
-    try {
-        const response = await axios.post(`${IP_URL}/games/move/${sign}`, gameContainer, {
-            headers: {
-                'Content-Type': 'application/json',
-                'token': await getData('token'),
-            },
-        });
-
-        if (response.status !== 200) {
-            console.error(response);
-            throw new Error('Failed to make a move');
-        }
-
-        return response.data;
-    } catch (error) {
-        console.log(error.message);
-        throw error;
-    }
-};
+// const makeMove = async (token, gameContainer, sign) => {
+//     try {
+//         const response = await axios.post(`${IP_URL}/games/move/${sign}`, gameContainer, {
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'token': await getData('token'),
+//             },
+//         });
+//
+//         if (response.status !== 200) {
+//             console.error(response);
+//             throw new Error('Failed to make a move');
+//         }
+//
+//         return response.data;
+//     } catch (error) {
+//         console.log(error.message);
+//         throw error;
+//     }
+// };
 
 
 const Game = () => {
@@ -53,6 +53,33 @@ const Game = () => {
     };
 
 
+    // const handleMove = async (sign) => {
+    //     try {
+    //         const gameid = await getData("gameid");
+    //         const token = await getData("token");
+    //
+    //         const gameContainer = {
+    //             uuid: gameid,
+    //             playerMove: sign,
+    //             opponentMove: null,
+    //         };
+    //
+    //         console.log(gameContainer.playerMove);
+    //
+    //         const moveResponse = await makeMove(token, gameContainer, sign);
+    //
+    //         console.log(moveResponse); //is logging correclty but not mapping to api
+    //         console.log(sign);
+    //
+    //         setPlayerMove(moveResponse.playerMove);
+    //         setOpponentMove(moveResponse.opponentMove);
+    //         setResult(moveResponse.result);
+    //
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
+
     const handleMove = async (sign) => {
         try {
             const gameid = await getData("gameid");
@@ -66,19 +93,31 @@ const Game = () => {
 
             console.log(gameContainer.playerMove);
 
-            const moveResponse = await makeMove(token, gameContainer, sign);
+            const response = await axios.post(`${IP_URL}/games/move/${sign}`, gameContainer, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': token,
+                },
+            });
 
-            console.log(moveResponse); //is logging correclty but not mapping to api
+            if (response.status !== 200) {
+                console.error(response);
+                throw new Error('Failed to make a move');
+            }
+
+            const moveResponse = response.data;
+
+            console.log(moveResponse);
             console.log(sign);
 
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
             setResult(moveResponse.result);
-
         } catch (error) {
             console.log(error);
         }
     };
+
 
     return (
         <View style={styles.container}>
