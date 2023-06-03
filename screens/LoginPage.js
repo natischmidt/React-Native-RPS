@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import IP_URL from "../services/IP";
+import {ImageBackground} from "react-native-web";
 
 const LoginPage = () => {
     const navigation = useNavigation();

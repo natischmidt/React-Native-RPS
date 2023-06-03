@@ -138,7 +138,6 @@ const Game = () => {
                 <TouchableOpacity onPress={() => handleMove("PAPER")}>
                     <Image source={require("../images/paper.png.bmp")} style={[styles.choiceImage]} />
                 </TouchableOpacity>
-
             </View>
         </View>
     );
@@ -164,6 +163,10 @@ const styles = StyleSheet.create({
     resultText: {
         fontSize: 24,
         fontWeight: "bold",
+    },
+    background: {
+        width: '100%',
+        height: '100%',
     },
 
 });

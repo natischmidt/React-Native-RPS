@@ -5,6 +5,7 @@ import IP_URL from '../services/IP';
 import { getData, storeData } from './HomePage';
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {ImageBackground} from "react-native-web";
 
 const StartGame = async () => {
     try {
@@ -137,6 +138,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 22,
+    },
+    background: {
+        width: '100%',
+        height: '100%',
     },
     gameItem: {
         flexDirection: 'row',
