@@ -4,6 +4,7 @@ import IP_URL from "../services/IP";
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import {ImageBackground } from "react-native";
 
 const Game = () => {
     const navigation = useNavigation();
@@ -127,6 +128,7 @@ const Game = () => {
 
     return (
         <View style={styles.container}>
+            <ImageBackground source={require('../assets/bg4.jpg')} resizeMode="cover" style={styles.background}>
             <Text style={styles.resultText}>{status}</Text>
             <View style={styles.choicesContainer}>
                 <TouchableOpacity onPress={() => handleMove("ROCK")}>
@@ -139,6 +141,7 @@ const Game = () => {
                     <Image source={require("../images/paper.png.bmp")} style={[styles.choiceImage]} />
                 </TouchableOpacity>
             </View>
+            </ImageBackground>
         </View>
     );
 };
@@ -155,7 +158,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     choiceImage: {
-        marginTop: 50,
+        marginTop: 90,
         width: 150,
         height: 180,
         resizeMode: 'contain',
@@ -163,6 +166,7 @@ const styles = StyleSheet.create({
     resultText: {
         fontSize: 24,
         fontWeight: "bold",
+        marginLeft: 150,
     },
     background: {
         width: '100%',

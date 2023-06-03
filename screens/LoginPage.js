@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import IP_URL from "../services/IP";
+import {ImageBackground} from "react-native";
 
 
 const LoginPage = () => {
@@ -37,6 +38,7 @@ const LoginPage = () => {
 
     return (
         <View style={styles.container}>
+            <ImageBackground source={require('../assets/bg2.jpg')} resizeMode="cover" style={styles.background}>
             <View style={styles.input}>
                 <TextInput
                     placeholder="Enter your name"
@@ -47,6 +49,7 @@ const LoginPage = () => {
                     <Button title="Set Name" onPress={setPlayerName} />
                 </View>
             </View>
+        </ImageBackground>
         </View>
     );
 };
@@ -57,11 +60,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    input: {
-        width: '80%',
-        marginBottom: 10,
+    background: {
+        width: '100%',
+        height: '100%',
     },
-    buttonContainer: {},
+    input: {
+        width: '50%',
+        marginTop:80,
+        marginLeft:100,
+    },
+    buttonContainer: {
+    },
 });
 
 export default LoginPage;

@@ -5,6 +5,7 @@ import IP_URL from '../services/IP';
 import { getData, storeData } from './HomePage';
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {ImageBackground} from "react-native";
 
 const StartGame = async () => {
     try {
@@ -113,6 +114,7 @@ const GamePage = () => {
 
     return (
         <View>
+            <ImageBackground source={require('../assets/bg3.jpg')} resizeMode="cover" style={styles.background}>
             <Button title="Start Game" onPress={handleStartGame} />
             <Button title="Join Game" onPress={() => setModalVisible(true)} />
 
@@ -127,6 +129,7 @@ const GamePage = () => {
                     <Button title="Close" onPress={() => setModalVisible(false)} />
                 </View>
             </Modal>
+            </ImageBackground>
         </View>
     );
 };
