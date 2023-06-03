@@ -5,7 +5,6 @@ import IP_URL from '../services/IP';
 import { getData, storeData } from './HomePage';
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {ImageBackground} from "react-native-web";
 
 const StartGame = async () => {
     try {
