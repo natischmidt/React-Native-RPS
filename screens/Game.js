@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
-import {getData} from "./HomePage";
 import {Alert, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useNavigation} from "@react-navigation/native";
-
-
 
 
 
@@ -41,7 +38,14 @@ const Game = () => {
             setGameStatus(response.data);
             console.log(response.data);
 
-            if (response.data.playerMove && response.data.opponentMove) {
+            // if (response.data.playerMove && response.data.opponentMove) {
+            //     setPlayerMove(response.data.playerMove);
+            //     setOpponentMove(response.data.opponentMove);
+            //     setResult(response.data.result);
+            //     handleResult(response.data.result, token);
+            // }
+
+            if (response.data.playerMove !== null && response.data.opponentMove !== null) {
                 setPlayerMove(response.data.playerMove);
                 setOpponentMove(response.data.opponentMove);
                 setResult(response.data.result);
@@ -52,30 +56,20 @@ const Game = () => {
             console.log(error);
         }
     };
-
-
-
-
     const handleMove = async (sign) => {
         try {
-            const gameid = await getData("gameid");
-            const token = await getData("token");
+            const token = await AsyncStorage.getItem('token');
 
-            const gameContainer = {
-                uuid: gameid,
-                playerMove: sign,
-                opponentMove: opponentMove,
-            };
-
-            console.log(gameContainer.playerMove);
-
-            const response = await axios.post(IP_URL + '/games/move/' + sign, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'token': token,
-                },
-
-            });
+            const response = await axios.post(
+                IP_URL + '/games/move/' + sign,
+                null,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token,
+                    }
+                }
+            );
 
             if (response.status !== 200) {
                 console.error(response);
@@ -84,20 +78,62 @@ const Game = () => {
 
             const moveResponse = response.data;
 
-            console.log(moveResponse);
-            console.log(gameContainer)
-            console.log(sign);
-            console.log(playerMove, opponentMove)
-
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
             setResult(moveResponse.result);
 
-            handleResult(moveResponse.result, token);
+
+            if (moveResponse.opponentMove !== null) {
+                handleResult(moveResponse.result, token);
+            }
         } catch (error) {
             console.log(error);
         }
     };
+
+
+    // const handleMove = async (sign) => {
+    //     try {
+    //         const gameid = await getData("gameid");
+    //         const token = await getData("token");
+    //
+    //         const gameContainer = {
+    //             uuid: gameid,
+    //             playerMove: sign,
+    //             opponentMove: opponentMove,
+    //         };
+    //
+    //         console.log(gameContainer.playerMove);
+    //
+    //         const response = await axios.post(IP_URL + '/games/move/' + sign, {
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'token': token,
+    //             },
+    //
+    //         });
+    //
+    //         if (response.status !== 200) {
+    //             console.error(response);
+    //             throw new Error('Failed to make a move');
+    //         }
+    //
+    //         const moveResponse = response.data;
+    //
+    //         console.log(moveResponse);
+    //         console.log(gameContainer)
+    //         console.log(sign);
+    //         console.log(playerMove, opponentMove)
+    //
+    //         setPlayerMove(moveResponse.playerMove);
+    //         setOpponentMove(moveResponse.opponentMove);
+    //         setResult(moveResponse.result);
+    //
+    //         handleResult(moveResponse.result, token);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     const handleResult = (result, token) => {
         if (result === "WIN" && token) {
