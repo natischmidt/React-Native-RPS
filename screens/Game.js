@@ -79,7 +79,7 @@ const Game = () => {
             console.log(playerMove, opponentMove)
 
             setPlayerMove(moveResponse.playerMove);
-            setOpponentMove(moveResponse.opponentMove);
+            setOpponentMove(opponentMove);
             setResult(moveResponse.result);
 
 
@@ -130,4 +130,5 @@ const styles = StyleSheet.create({
 });
 
 export default Game;
+
 
