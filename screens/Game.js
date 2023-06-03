@@ -2,14 +2,16 @@ import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
 import {getData} from "./HomePage";
-import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Alert, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useNavigation} from "@react-navigation/native";
 
 
 
 
 
 const Game = () => {
+    const navigation = useNavigation();
     const [playerMove, setPlayerMove] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
     const [result, setResult] = useState("");
@@ -38,6 +40,14 @@ const Game = () => {
 
             setGameStatus(response.data);
             console.log(response.data);
+
+            if (response.data.playerMove && response.data.opponentMove) {
+                setPlayerMove(response.data.playerMove);
+                setOpponentMove(response.data.opponentMove);
+                setResult(response.data.result);
+                handleResult(response.data.result, token);
+            }
+
         } catch (error) {
             console.log(error);
         }
@@ -54,11 +64,12 @@ const Game = () => {
             const gameContainer = {
                 uuid: gameid,
                 playerMove: sign,
+                opponentMove: opponentMove,
             };
 
             console.log(gameContainer.playerMove);
 
-            const response = await axios.post(IP_URL + '/games/move/' + sign, gameContainer, {
+            const response = await axios.post(IP_URL + '/games/move/' + sign, {
                 headers: {
                     'Content-Type': 'application/json',
                     'token': token,
@@ -79,15 +90,45 @@ const Game = () => {
             console.log(playerMove, opponentMove)
 
             setPlayerMove(moveResponse.playerMove);
-            setOpponentMove(opponentMove);
+            setOpponentMove(moveResponse.opponentMove);
             setResult(moveResponse.result);
 
-
+            handleResult(moveResponse.result, token);
         } catch (error) {
             console.log(error);
         }
     };
 
+    const handleResult = (result, token) => {
+        if (result === "WIN" && token) {
+            Alert.alert(":)", "You won!", [
+                {
+                    text: "OK :)",
+                    onPress: () => {
+                        navigation.navigate("Home");
+                    },
+                },
+            ]);
+        } else if (result === "LOSE" && token) {
+            Alert.alert(":(", "You lost!", [
+                {
+                    text: "OK :(",
+                    onPress: () => {
+                        navigation.navigate("Home");
+                    },
+                },
+            ]);
+        } else if (result === "DRAW" && token) {
+            Alert.alert(":/", "It's a draw..", [
+                {
+                    text: "OK :/",
+                    onPress: () => {
+                        navigation.navigate("Home");
+                    },
+                },
+            ]);
+        }
+    };
 
     return (
         <View style={styles.container}>
