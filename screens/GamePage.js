@@ -86,10 +86,8 @@ const GamePage = () => {
 
     const handleStartGame = async () => {
         await StartGame().then((response) => {
-            console.log('this is the' + response);
-            console.log('this is the response.data' + response.data);
-            // console.log(response.data)
-            storeData('gameid', response);
+            console.log(response.data)
+            storeData('gameid', response.gameStatusId);
             console.log('Started Game');
             navigation.navigate('Game');
         });

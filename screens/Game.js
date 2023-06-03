@@ -67,23 +67,26 @@ const Game = () => {
             );
 
             setGameStatus(response.data);
-            console.log(response.data);
-            console.log(response.data.playerMove);
-            console.log(response.data.opponentMove);
-            console.log(response.data.result);
 
-            if (response.data.playerMove !== null && response.data.opponentMove !== null) {
-                setPlayerMove(response.data.playerMove);
-                setOpponentMove(response.data.opponentMove);
-                setResult(response.data.result);
-                handleResult(response.data.result, token);
-            }
+            console.log('Response data is:', response.data);
+            console.log('PlayerMove is:', playerMove);
+            console.log('Response data playerMove is:', response.data.playerMove);
+            console.log('Response data opponentMove is:', response.data.opponentMove);
+            console.log('Response data result is:', response.data.result);
+            console.log('Result is:', result);
 
+            setPlayerMove(response.data.playerMove);
+            setOpponentMove(response.data.opponentMove);
+            setResult(response.data.result);
+
+            handleResult(response.data.result, token);
 
         } catch (error) {
             console.log(error);
         }
     };
+
+
     const handleMove = async (sign) => {
         try {
             const token = await AsyncStorage.getItem('token');
@@ -94,7 +97,7 @@ const Game = () => {
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        token,
+                        'token': token,
                     }
                 }
             );
@@ -109,9 +112,13 @@ const Game = () => {
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
             setResult(moveResponse.result);
-            console.log(response.data.result);
-            console.log(moveResponse.result);
 
+            console.log('Response data is:', response.data);
+            console.log('PlayerMove is:', playerMove);
+            console.log('Response data playerMove is:', response.data.playerMove);
+            console.log('Response data opponentMove is:', response.data.opponentMove);
+            console.log('Response data result is:', response.data.result);
+            console.log('Result is:', result);
 
             if (moveResponse.opponentMove !== null) {
                 handleResult(moveResponse.result, token);
@@ -120,6 +127,7 @@ const Game = () => {
             console.log(error);
         }
     };
+
 
 
 
@@ -164,5 +172,4 @@ const styles = StyleSheet.create({
 });
 
 export default Game;
-
 
