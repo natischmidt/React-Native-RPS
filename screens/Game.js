@@ -66,14 +66,6 @@ const Game = () => {
             );
 
             setGameStatus(response.data);
-
-            console.log('Response data is:', response.data);
-            console.log('PlayerMove is:', playerMove);
-            console.log('Response data playerMove is:', response.data.playerMove);
-            console.log('Response data opponentMove is:', response.data.opponentMove);
-            console.log('Response data status is:', response.data.status);
-            console.log('Status is:', status);
-
             setPlayerMove(response.data.playerMove);
             setOpponentMove(response.data.opponentMove);
             setStatus(response.data.status);
@@ -110,13 +102,6 @@ const Game = () => {
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
             setStatus(moveResponse.status);
-
-            console.log('Response data is:', response.data);
-            console.log('PlayerMove is:', playerMove);
-            console.log('Response data playerMove is:', response.data.playerMove);
-            console.log('Response data opponentMove is:', response.data.opponentMove);
-            console.log('Response data status is:', response.data.status);
-            console.log('Status is:', status);
 
             if (moveResponse.opponentMove !== null) {
                 handleResult(moveResponse.status, token);
