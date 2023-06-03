@@ -1,21 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
-import {Alert, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {useNavigation} from "@react-navigation/native";
-
-
+import { useNavigation } from "@react-navigation/native";
 
 const Game = () => {
     const navigation = useNavigation();
     const [playerMove, setPlayerMove] = useState("");
     const [opponentMove, setOpponentMove] = useState("");
-    const [result, setResult] = useState("");
+    const [status, setStatus] = useState("");
     const [gameStatus, setGameStatus] = useState(null);
 
-    const handleResult = (result, token) => {
-        if (result === "WIN" && token) {
+    const handleResult = (status, token) => {
+        if (status === "WIN" && token) {
             Alert.alert(":)", "You won!", [
                 {
                     text: "OK :)",
@@ -24,7 +22,7 @@ const Game = () => {
                     },
                 },
             ]);
-        } else if (result === "LOSE" && token) {
+        } else if (status === "LOSE" && token) {
             Alert.alert(":(", "You lost!", [
                 {
                     text: "OK :(",
@@ -33,7 +31,7 @@ const Game = () => {
                     },
                 },
             ]);
-        } else if (result === "DRAW" && token) {
+        } else if (status === "DRAW" && token) {
             Alert.alert(":/", "It's a draw..", [
                 {
                     text: "OK :/",
@@ -72,20 +70,19 @@ const Game = () => {
             console.log('PlayerMove is:', playerMove);
             console.log('Response data playerMove is:', response.data.playerMove);
             console.log('Response data opponentMove is:', response.data.opponentMove);
-            console.log('Response data result is:', response.data.result);
-            console.log('Result is:', result);
+            console.log('Response data status is:', response.data.status);
+            console.log('Status is:', status);
 
             setPlayerMove(response.data.playerMove);
             setOpponentMove(response.data.opponentMove);
-            setResult(response.data.result);
+            setStatus(response.data.status);
 
-            handleResult(response.data.result, token);
+            handleResult(response.data.status, token);
 
         } catch (error) {
             console.log(error);
         }
     };
-
 
     const handleMove = async (sign) => {
         try {
@@ -111,25 +108,22 @@ const Game = () => {
 
             setPlayerMove(moveResponse.playerMove);
             setOpponentMove(moveResponse.opponentMove);
-            setResult(moveResponse.result);
+            setStatus(moveResponse.status);
 
             console.log('Response data is:', response.data);
             console.log('PlayerMove is:', playerMove);
             console.log('Response data playerMove is:', response.data.playerMove);
             console.log('Response data opponentMove is:', response.data.opponentMove);
-            console.log('Response data result is:', response.data.result);
-            console.log('Result is:', result);
+            console.log('Response data status is:', response.data.status);
+            console.log('Status is:', status);
 
             if (moveResponse.opponentMove !== null) {
-                handleResult(moveResponse.result, token);
+                handleResult(moveResponse.status, token);
             }
         } catch (error) {
             console.log(error);
         }
     };
-
-
-
 
     return (
         <View style={styles.container}>
@@ -143,7 +137,7 @@ const Game = () => {
                 <TouchableOpacity onPress={() => handleMove("PAPER")}>
                     <Image source={require("../images/paper.png.bmp")} style={[styles.image, styles.choiceImage]} />
                 </TouchableOpacity>
-                <Text style={styles.resultText}>{result}</Text>
+                <Text style={styles.resultText}>{status}</Text>
             </View>
         </View>
     );
@@ -172,4 +166,3 @@ const styles = StyleSheet.create({
 });
 
 export default Game;
-
