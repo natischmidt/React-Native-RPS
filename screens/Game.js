@@ -127,33 +127,36 @@ const Game = () => {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.resultText}>{status}</Text>
             <View style={styles.choicesContainer}>
                 <TouchableOpacity onPress={() => handleMove("ROCK")}>
-                    <Image source={require("../images/rock.png.bmp")} style={[styles.image, styles.choiceImage]} />
+                    <Image source={require("../images/rock.png.bmp")} style={[ styles.choiceImage]} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleMove("SCISSOR")}>
-                    <Image source={require("../images/scissor.png.bmp")} style={[styles.image, styles.choiceImage]} />
+                    <Image source={require("../images/scissor.png.bmp")} style={[ styles.choiceImage]} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleMove("PAPER")}>
-                    <Image source={require("../images/paper.png.bmp")} style={[styles.image, styles.choiceImage]} />
+                    <Image source={require("../images/paper.png.bmp")} style={[styles.choiceImage]} />
                 </TouchableOpacity>
-                <Text style={styles.resultText}>{status}</Text>
+
             </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {},
+    container: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "flex-start",
+    },
     choicesContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         marginTop: 20,
     },
-    choiceButton: {},
-    image: {},
     choiceImage: {
-        marginTop: 400,
+        marginTop: 50,
         width: 150,
         height: 180,
         resizeMode: 'contain',
@@ -161,8 +164,8 @@ const styles = StyleSheet.create({
     resultText: {
         fontSize: 24,
         fontWeight: "bold",
-        marginTop: 20,
     },
+
 });
 
 export default Game;
