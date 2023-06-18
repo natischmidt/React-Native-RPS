@@ -17,7 +17,7 @@ const GamePage = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            GameList();
+            GameList(openGames);
         }, 2000);
 
         return () => {
@@ -42,8 +42,6 @@ const GamePage = () => {
             navigation.navigate('Game');
         });
     };
-
-
 
     return (
         <View>
