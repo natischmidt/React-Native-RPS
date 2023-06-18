@@ -7,26 +7,6 @@ import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {ImageBackground} from "react-native";
 
-const StartGame = async () => {
-    try {
-        const token = await AsyncStorage.getItem('token');
-
-        const response = await axios.post(`${IP_URL}/games/start`, null, {
-            headers: {
-                'Content-Type': 'application/json',
-                token,
-            },
-        });
-
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
-};
-
-
 
 const JoinGame = async (gameId) => {
     try {
@@ -117,7 +97,6 @@ const GamePage = () => {
             <ImageBackground source={require('../assets/bg3.jpg')} resizeMode="cover" style={styles.background}>
             <Button title="Start Game" onPress={handleStartGame} />
             <Button title="Join Game" onPress={() => setModalVisible(true)} />
-
             <Modal visible={modalVisible} animationType="slide">
                 <View style={styles.modalContainer}>
                     <Text>Choose a game to join:</Text>
