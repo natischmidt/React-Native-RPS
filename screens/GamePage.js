@@ -7,6 +7,8 @@ import StartGame from "../components/StartGame";
 import JoinGame from "../components/JoinGame";
 import renderList from "../components/RenderList";
 import GameList from "../components/GameList";
+import IP_URL from "../services/IP";
+import axios from "axios";
 
 
 const GamePage = () => {
@@ -14,10 +16,29 @@ const GamePage = () => {
     const [openGames, setOpenGames] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
 
-
     useEffect(() => {
+        const fetchGameList = async () => {
+            try {
+                const token = await getData('token');
+                const response = await axios.get(`${IP_URL}/games/listAll`, {
+                    headers: {
+                        token,
+                    },
+                });
+
+                if (response.status === 200) {
+                    const gameList = response.data;
+                    setOpenGames(gameList);
+                } else {
+                    throw new Error('Failed to fetch game list');
+                }
+            } catch (error) {
+                console.error(error.message);
+            }
+        };
+
         const interval = setInterval(() => {
-            GameList(openGames);
+            fetchGameList();
         }, 2000);
 
         return () => {
