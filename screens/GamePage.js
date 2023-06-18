@@ -1,31 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import IP_URL from '../services/IP';
 import { getData, storeData } from './HomePage';
-import axios from 'axios';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {ImageBackground} from "react-native";
-
-
-const JoinGame = async (gameId) => {
-    try {
-        const token = await AsyncStorage.getItem('token');
-
-        const response = await axios.get(`${IP_URL}/games/join/${gameId}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                token,
-            },
-        });
-
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
-};
+import StartGame from "../components/StartGame";
+import JoinGame from "../components/JoinGame";
+import renderList from "../components/RenderList";
+import GameList from "../components/GameList";
 
 
 const GamePage = () => {
@@ -33,27 +14,6 @@ const GamePage = () => {
     const [openGames, setOpenGames] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
 
-    const GameList = async () => {
-        try {
-            const token = await getData('token');
-            const response = await axios.get(`${IP_URL}/games/listAll`, {
-                headers: {
-                    token,
-                },
-            });
-
-            if (response.status === 200) {
-                const gameList = response.data;
-                setOpenGames(gameList);
-            } else {
-                throw new Error('Failed to fetch game list');
-            }
-        } catch (error) {
-            console.error(error.message);
-        }
-
-
-    }
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -83,14 +43,7 @@ const GamePage = () => {
         });
     };
 
-    const renderList = ({ item }) => {
-        return (
-            <View style={styles.gameItem}>
-                <Text>{item.gameStatusId}</Text>
-                <Button title="Join" onPress={() => handleJoin(item.gameStatusId)} />
-            </View>
-        );
-    };
+
 
     return (
         <View>
