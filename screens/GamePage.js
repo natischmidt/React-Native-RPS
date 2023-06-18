@@ -5,8 +5,9 @@ import { getData, storeData } from './HomePage';
 import { ImageBackground } from "react-native";
 import StartGame from "../components/StartGame";
 import JoinGame from "../components/JoinGame";
-import RenderList from "../components/RenderList";
-import GameList from "../components/GameList";
+
+import axios from "axios";
+import IP_URL from "../services/IP";
 
 const GamePage = () => {
     const navigation = useNavigation();
