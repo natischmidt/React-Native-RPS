@@ -5,6 +5,7 @@ import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-na
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import {ImageBackground } from "react-native";
+import GameButton from "../components/GameButton";
 
 const Game = () => {
     const navigation = useNavigation();
@@ -114,18 +115,7 @@ const Game = () => {
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../assets/bg4.jpg')} resizeMode="cover" style={styles.background}>
-            <Text style={styles.resultText}>{status}</Text>
-            <View style={styles.choicesContainer}>
-                <TouchableOpacity onPress={() => handleMove("ROCK")}>
-                    <Image source={require("../images/rock.png.bmp")} style={[ styles.choiceImage]} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleMove("SCISSOR")}>
-                    <Image source={require("../images/scissor.png.bmp")} style={[ styles.choiceImage]} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleMove("PAPER")}>
-                    <Image source={require("../images/paper.png.bmp")} style={[styles.choiceImage]} />
-                </TouchableOpacity>
-            </View>
+                <GameButton handleMove={handleMove} status={status} />
             </ImageBackground>
         </View>
     );
