@@ -70,7 +70,10 @@ export const MakeMove = async (sign) => {
             throw new Error('Failed to make a move');
         }
 
+        return response.data;
+
     } catch (error) {
         console.log(error);
+        throw error;
     }
 };

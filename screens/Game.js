@@ -81,14 +81,12 @@ const Game = () => {
 
     const handleMove = async (sign) => {
         await MakeMove(sign).then((response) => {
-            console.log(response);
-            const moveresponse = response;
-            setPlayerMove(moveresponse.playerMove);
-            setOpponentMove(moveresponse.opponentMove);
-            setStatus(moveresponse.status);
+            setPlayerMove(response.playerMove);
+            setOpponentMove(response.opponentMove);
+            setStatus(response.status);
 
-            if (response.data.opponentMove !== null) {
-                handleResult(moveresponse.status, token);
+            if (response.opponentMove !== null) {
+                handleResult(response.status, token);
             }
         });
     }
