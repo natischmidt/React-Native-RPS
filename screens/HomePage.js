@@ -1,28 +1,9 @@
 import React, {useEffect} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {View, Text, StyleSheet} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import {ImageBackground, TouchableOpacity} from "react-native";
 import {getToken} from "../services/Api";
 
-
-export const storeData = async (key, value) => {
-    try {
-        await AsyncStorage.setItem(key, value)
-            .then(() => console.log(key  + value ))
-
-    } catch (error) {
-        console.log(error.message())
-    }
-}
-
-export const getData = async (key) => {
-    try {
-        return await AsyncStorage.getItem(key);
-    } catch(e) {
-        console.log(e.message())
-    }
-}
 
 const HomePage = () => {
 

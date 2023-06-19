@@ -83,8 +83,7 @@ const GamePage = () => {
                         <FlatList
                             data={openGames}
                             renderItem={renderList}
-                            keyExtractor={(item) => item.gameStatusId}
-                        />
+                            keyExtractor={(item) => item.gameStatusId}/>
                         <Button title="Close" onPress={() => setModalVisible(false)} />
                     </View>
                 </Modal>

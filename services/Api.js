@@ -70,15 +70,9 @@ export const MakeMove = async (sign) => {
             throw new Error('Failed to make a move');
         }
 
-        const moveResponse = response.data;
+        export const moveResponse = response.data;
 
-        setPlayerMove(moveResponse.playerMove);
-        setOpponentMove(moveResponse.opponentMove);
-        setStatus(moveResponse.status);
 
-        if (moveResponse.opponentMove !== null) {
-            handleResult(moveResponse.status, token);
-        }
     } catch (error) {
         console.log(error);
     }

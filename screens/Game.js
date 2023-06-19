@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import IP_URL from "../services/IP";
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert,  StyleSheet,  View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import {ImageBackground } from "react-native";
 import GameButton from "../components/GameButton";
-import {handleMove, MakeMove} from "../services/Api";
+import {MakeMove, moveResponse} from "../services/Api";
 
 const Game = () => {
     const navigation = useNavigation();
@@ -80,7 +80,17 @@ const Game = () => {
     };
 
     const handleMove = async (sign) => {
-        await MakeMove(sign);
+        await MakeMove(sign)
+
+        setPlayerMove(moveResponse.playerMove);
+        setOpponentMove(moveResponse.opponentMove);
+        setStatus(moveResponse.status);
+
+        if (moveResponse.opponentMove !== null) {
+            handleResult(moveResponse.status, token);
+        }
+
+        ;
     }
 
     return (
