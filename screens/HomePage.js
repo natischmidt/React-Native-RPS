@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import {ImageBackground, TouchableOpacity} from "react-native";
 import {getToken} from "../services/Api";
-
+import {storeData } from '../services/Storage';
 
 const HomePage = () => {
 

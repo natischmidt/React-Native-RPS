@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { getData, storeData } from './HomePage';
+import { getData, storeData } from '../services/Storage';
 import { ImageBackground } from "react-native";
 import {JoinGame, StartGame} from "../services/Api";
 import axios from "axios";

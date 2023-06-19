@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import {ImageBackground } from "react-native";
 import GameButton from "../components/GameButton";
-import {MakeMove, moveResponse} from "../services/Api";
+import {MakeMove, moveResponse, StartGame} from "../services/Api";
 
 const Game = () => {
     const navigation = useNavigation();
@@ -80,17 +80,17 @@ const Game = () => {
     };
 
     const handleMove = async (sign) => {
-        await MakeMove(sign)
+        await MakeMove(sign).then((response) => {
+            console.log(response);
+            const moveresponse = response;
+            setPlayerMove(moveresponse.playerMove);
+            setOpponentMove(moveresponse.opponentMove);
+            setStatus(moveresponse.status);
 
-        setPlayerMove(moveResponse.playerMove);
-        setOpponentMove(moveResponse.opponentMove);
-        setStatus(moveResponse.status);
-
-        if (moveResponse.opponentMove !== null) {
-            handleResult(moveResponse.status, token);
-        }
-
-        ;
+            if (response.data.opponentMove !== null) {
+                handleResult(moveresponse.status, token);
+            }
+        });
     }
 
     return (
