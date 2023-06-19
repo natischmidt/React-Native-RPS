@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import {ImageBackground } from "react-native";
 import GameButton from "../components/GameButton";
-import {handleMove} from "../services/Api";
+import {handleMove, MakeMove} from "../services/Api";
 
 const Game = () => {
     const navigation = useNavigation();
@@ -79,6 +79,9 @@ const Game = () => {
         }
     };
 
+    const handleMove = async (sign) => {
+        await MakeMove(sign);
+    }
 
     return (
         <View style={styles.container}>

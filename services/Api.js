@@ -50,7 +50,7 @@ export const JoinGame = async (gameId) => {
     }
 };
 
-export const handleMove = async (sign) => {
+export const MakeMove = async (sign) => {
     try {
         const token = await AsyncStorage.getItem('token');
 
