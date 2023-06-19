@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import {ImageBackground } from "react-native";
 import GameButton from "../components/GameButton";
+import {handleMove} from "../services/Api";
 
 const Game = () => {
     const navigation = useNavigation();
@@ -78,39 +79,6 @@ const Game = () => {
         }
     };
 
-    const handleMove = async (sign) => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-
-            const response = await axios.post(
-                IP_URL + '/games/move/' + sign,
-                null,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'token': token,
-                    }
-                }
-            );
-
-            if (response.status !== 200) {
-                console.error(response);
-                throw new Error('Failed to make a move');
-            }
-
-            const moveResponse = response.data;
-
-            setPlayerMove(moveResponse.playerMove);
-            setOpponentMove(moveResponse.opponentMove);
-            setStatus(moveResponse.status);
-
-            if (moveResponse.opponentMove !== null) {
-                handleResult(moveResponse.status, token);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     return (
         <View style={styles.container}>

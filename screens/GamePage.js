@@ -3,11 +3,10 @@ import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getData, storeData } from './HomePage';
 import { ImageBackground } from "react-native";
-import StartGame from "../components/StartGame";
-import JoinGame from "../components/JoinGame";
-
+import {JoinGame, StartGame} from "../services/Api";
 import axios from "axios";
 import IP_URL from "../services/IP";
+
 
 const GamePage = () => {
     const navigation = useNavigation();

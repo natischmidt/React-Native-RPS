@@ -2,7 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import IP_URL from "./IP";
 
-const StartGame = async () => {
+export const getToken = async () => {
+
+    try {
+        const response = await fetch(IP_URL + '/players/auth/token');
+        const json = await response.json();
+        return json.toString();
+    } catch (error) {
+        console.error(error);
+    }
+};
+export const StartGame = async () => {
     try {
         const token = await AsyncStorage.getItem('token');
 
@@ -21,7 +31,7 @@ const StartGame = async () => {
     }
 };
 
-const JoinGame = async (gameId) => {
+export const JoinGame = async (gameId) => {
     try {
         const token = await AsyncStorage.getItem('token');
 
@@ -37,5 +47,39 @@ const JoinGame = async (gameId) => {
     } catch (error) {
         console.log(error);
         return null;
+    }
+};
+
+export const handleMove = async (sign) => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+
+        const response = await axios.post(
+            IP_URL + '/games/move/' + sign,
+            null,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': token,
+                }
+            }
+        );
+
+        if (response.status !== 200) {
+            console.error(response);
+            throw new Error('Failed to make a move');
+        }
+
+        const moveResponse = response.data;
+
+        setPlayerMove(moveResponse.playerMove);
+        setOpponentMove(moveResponse.opponentMove);
+        setStatus(moveResponse.status);
+
+        if (moveResponse.opponentMove !== null) {
+            handleResult(moveResponse.status, token);
+        }
+    } catch (error) {
+        console.log(error);
     }
 };

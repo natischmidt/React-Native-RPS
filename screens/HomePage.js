@@ -1,21 +1,10 @@
 import React, {useEffect} from 'react';
-import IP_URL from "../services/IP";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {View, Text, StyleSheet} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import {ImageBackground, TouchableOpacity} from "react-native";
+import {getToken} from "../services/Api";
 
-
-const getToken = async () => {
-
-    try {
-        const response = await fetch(IP_URL + '/players/auth/token');
-        const json = await response.json();
-        return json.toString();
-    } catch (error) {
-        console.error(error);
-    }
-};
 
 export const storeData = async (key, value) => {
     try {
@@ -35,11 +24,9 @@ export const getData = async (key) => {
     }
 }
 
-
 const HomePage = () => {
 
     const navigation = useNavigation();
-
     const handlePress = () => {
         navigation.navigate('Login');
     };
